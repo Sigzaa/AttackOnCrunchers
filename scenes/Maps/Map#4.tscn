@@ -1,0 +1,57 @@
+[gd_scene load_steps=5 format=3 uid="uid://nogylkisa3sa"]
+
+[ext_resource type="Texture2D" uid="uid://csqftm2mbjlf7" path="res://resources/CIty.png" id="1_dkb77"]
+[ext_resource type="PackedScene" uid="uid://cegpftk7mtotk" path="res://scenes/Maps/TowerZone.tscn" id="2_l40p2"]
+[ext_resource type="PackedScene" uid="uid://dpcfudaj8kilw" path="res://scenes/Maps/dead_zone.tscn" id="3_xfvws"]
+
+[sub_resource type="Curve2D" id="1"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -3, 813, 0, 0, 0, 0, 650, 870, 0, 0, 0, 0, 1136, 938, 0, 0, 0, 0, 1608, 1002, 0, 0, 0, 0, 1997, 1056, 0, 0, 0, 0, 2292, 1095, 0, 0, 0, 0, 2732, 1143, 0, 0, 0, 0, 3217, 1170, 0, 0, 0, 0, 3564, 1170, 0, 0, 0, 0, 3818, 1168, 0, 0, 0, 0, 4003, 1152)
+}
+point_count = 11
+
+[node name="Map#4" type="Node"]
+
+[node name="City" type="Sprite2D" parent="."]
+position = Vector2(1920, 1080)
+texture = ExtResource("1_dkb77")
+metadata/_edit_lock_ = true
+
+[node name="TowerZone" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(672, 590)
+
+[node name="TowerZone2" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(3542, 1407)
+
+[node name="TowerZone3" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(1764, 1339)
+
+[node name="TowerZone4" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(1065, 1255)
+
+[node name="TowerZone5" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(1424, 1300)
+
+[node name="TowerZone6" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(1428, 657)
+
+[node name="TowerZone7" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(2388, 767)
+
+[node name="TowerZone9" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(2881, 852)
+
+[node name="TowerZone8" parent="." instance=ExtResource("2_l40p2")]
+position = Vector2(2277, 1401)
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource("1")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D" groups=["enemy_path"]]
+position = Vector2(-3, 813)
+rotation = 0.0870687
+cubic_interp = false
+loop = false
+
+[node name="DeadZone" parent="." instance=ExtResource("3_xfvws")]
+position = Vector2(4005, 1150)

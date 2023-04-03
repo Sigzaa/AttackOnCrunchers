@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://448cel0x0jw6"]
+
+[ext_resource type="PackedScene" uid="uid://bwwxow3b8iwux" path="res://scenes/MainMenu.tscn" id="1"]
+
+[sub_resource type="Environment" id="1"]
+background_mode = 4
+glow_enabled = true
+glow_blend_mode = 0
+
+[node name="Root" type="Node"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("1")
+
+[node name="MainMenu" parent="." instance=ExtResource("1")]

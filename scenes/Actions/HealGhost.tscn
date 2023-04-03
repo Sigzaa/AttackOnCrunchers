@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://kenney_monochromerpg/Dot Matrix/Sprites/heart2.png" type="Texture2D" id=1]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Sprite2D
+				
+				
+@onready var bank = get_node(\"../Bank\")
+
+func _ready():
+	pass
+
+func _process(delta):
+		
+	for area in $Area2D.get_overlapping_areas():
+		if area.is_in_group(\"tower_collider\"):
+			
+			var core = area.get_parent()
+			
+			if bank.money >= core.upgrade_cost and core.level < 4:
+				modulate.b = 1
+				modulate.g = 1
+			
+				if Input.is_mouse_button_pressed(1):
+					
+					bank.money -= core.upgrade_cost
+					core.level += 1
+					
+					self.queue_free()
+
+			
+		else:
+			modulate.b = 0.3
+			modulate.g = 0.3
+	
+"
+
+[sub_resource type="RectangleShape2D" id=1]
+size = Vector2( 2, 2 )
+
+[node name="HealGhost" type="Sprite2D" groups=["ghost"]]
+scale = Vector2( 3, 3 )
+texture = ExtResource( 1 )
+script = SubResource( 2 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )

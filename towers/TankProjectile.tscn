@@ -1,0 +1,310 @@
+[gd_scene load_steps=22 format=3 uid="uid://014tk62fsrek"]
+
+[ext_resource type="Texture2D" uid="uid://cmgxggdaljxxo" path="res://towers/tank/bullet.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://3na0x2wvk6xl" path="res://resources/smoke.png" id="1_o88ds"]
+[ext_resource type="Texture2D" uid="uid://bpxi1kp5sin87" path="res://resources/tank_explosion/1.png" id="3_xxjmm"]
+[ext_resource type="Texture2D" uid="uid://ruakkmalsra" path="res://resources/tank_explosion/2.png" id="4_t5sf4"]
+[ext_resource type="Texture2D" uid="uid://d2a2xv648xqva" path="res://resources/tank_explosion/3.png" id="5_l0l87"]
+[ext_resource type="Texture2D" uid="uid://688q6ctlyxqm" path="res://resources/tank_explosion/4.png" id="6_n13ip"]
+[ext_resource type="Texture2D" uid="uid://4nchnxjc24r4" path="res://resources/tank_explosion/5.png" id="7_tbd3l"]
+[ext_resource type="Texture2D" uid="uid://de81tmc2cq217" path="res://resources/tank_explosion/6.png" id="8_qsncn"]
+[ext_resource type="Texture2D" uid="uid://bqiyyjnpq515b" path="res://resources/tank_explosion/7.png" id="9_0b1k0"]
+[ext_resource type="Texture2D" uid="uid://cyidxrnx528sx" path="res://resources/tank_explosion/8.png" id="10_jip1t"]
+
+[sub_resource type="GDScript" id="2"]
+resource_name = "ProjectileScript"
+script/source = "extends Node2D
+
+@export var target: Vector2;
+@export var dmg = 11;
+@onready var anim = $Anim;
+@onready var timer = $Lifetimer;
+var came = false;
+var speed = 100;
+
+func _on_Lifetimer_timeout():
+	queue_free()
+
+func flip(flag):
+	$Sprite2D.set_flip_h(flag)
+	
+
+func _process(delta):
+	if came:
+		rotation = 0;
+		return
+	var direction = position.direction_to(target).normalized();
+	
+	position += direction * delta * speed * 4;
+	if position.distance_to(target) <= 4:
+		anim.play(\"Explode\");
+		came = true
+	
+	position += Vector2(0., -4.) * delta * 50;
+	rotation =  target.angle() + deg_to_rad(90);
+	
+	#position +=	Vector2.from_angle(sin(direction.angle())/direction.x) * delta * speed * 10;
+
+
+
+
+
+func _on_tank_explosion_area_area_entered(area):
+	var cruncher = area.get_parent();
+	if cruncher.is_in_group(\"cruncher\"):
+		cruncher.take_dmg(dmg);
+"
+
+[sub_resource type="Gradient" id="Gradient_d66hr"]
+offsets = PackedFloat32Array(0.00197628, 0.06917, 0.3083, 0.911067, 1)
+colors = PackedColorArray(0, 0, 0, 0, 1, 0.309804, 0.0705882, 1, 0.123657, 0.123657, 0.123657, 1, 0.928854, 0.928854, 0.928854, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_csm50"]
+gradient = SubResource("Gradient_d66hr")
+
+[sub_resource type="Curve" id="Curve_50onj"]
+max_value = 2.0
+_data = [Vector2(0, 0.443526), 0.0, 0.0, 0, 0, Vector2(1, 1.83471), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_r6h2f"]
+curve = SubResource("Curve_50onj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_cm7xy"]
+particle_flag_disable_z = true
+spread = 15.0
+gravity = Vector3(0, 0, 0)
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+damping_min = 40.0
+damping_max = 40.0
+angle_min = -197.4
+angle_max = 236.0
+scale_min = 0.0
+scale_max = 0.05
+scale_curve = SubResource("CurveTexture_r6h2f")
+color_ramp = SubResource("GradientTexture1D_csm50")
+
+[sub_resource type="CapsuleShape2D" id="1"]
+radius = 5.17955
+height = 10.3591
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j0ap8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_xxjmm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_t5sf4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_l0l87")
+}, {
+"duration": 1.5,
+"texture": ExtResource("6_n13ip")
+}, {
+"duration": 1.5,
+"texture": ExtResource("7_tbd3l")
+}, {
+"duration": 2.0,
+"texture": ExtResource("8_qsncn")
+}, {
+"duration": 2.0,
+"texture": ExtResource("9_0b1k0")
+}, {
+"duration": 2.0,
+"texture": ExtResource("10_jip1t")
+}],
+"loop": false,
+"name": &"explosion",
+"speed": 15.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_p41ac"]
+radius = 150.479
+
+[sub_resource type="Animation" id="Animation_gjvxr"]
+resource_name = "Explode"
+length = 5.0
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Explosion")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"explosion", 1.0, false],
+"method": &"play"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Explosion:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.5, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Shadow:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2, 4.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Explosion/TankExplosionArea:monitoring")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Explosion/TankExplosionArea:monitorable")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Explosion:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Particles:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Sprite2D:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/8/type = "method"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath(".")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Shadow:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0.1, 4.9),
+"transitions": PackedFloat32Array(4, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gd2gb"]
+_data = {
+"Explode": SubResource("Animation_gjvxr")
+}
+
+[node name="TankProjectile" type="Node2D" groups=["tank_projectile"]]
+script = SubResource("2")
+
+[node name="Particles" type="GPUParticles2D" parent="."]
+rotation = -3.04439
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_cm7xy")
+texture = ExtResource("1_o88ds")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = ExtResource("1")
+offset = Vector2(5, 0)
+
+[node name="Lifetimer" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+autostart = true
+
+[node name="TankProjectileBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TankProjectileBox"]
+shape = SubResource("1")
+
+[node name="Shadow" type="Polygon2D" parent="."]
+visible = false
+position = Vector2(-2.15649, -59.9966)
+color = Color(0, 0, 0, 0.231373)
+polygon = PackedVector2Array(-86.9199, 60.408, -72.9955, 81.5973, -56.0441, 90.6784, -28.1953, 97.3379, 2.68048, 93.7054, 39.0049, 95.5217, 55.9564, 101.576, 76.5402, 81.5973, 93.4916, 71.3054, 84.4105, 48.2999, 69.2753, 28.3214, 41.4266, 29.5322, 25.686, 21.0565, 0.864258, 25.2944, -17.298, 22.8727, -31.2224, 30.1376, -60.8873, 22.8727, -84.4982, 36.7971)
+
+[node name="Explosion" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(-2.15649, -0.996613)
+sprite_frames = SubResource("SpriteFrames_j0ap8")
+animation = &"explosion"
+
+[node name="TankExplosionArea" type="Area2D" parent="Explosion"]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Explosion/TankExplosionArea"]
+shape = SubResource("CircleShape2D_p41ac")
+debug_color = Color(0.854902, 0.356863, 0.243137, 0.419608)
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_gd2gb")
+}
+
+[connection signal="timeout" from="Lifetimer" to="." method="_on_Lifetimer_timeout"]
+[connection signal="area_entered" from="Explosion/TankExplosionArea" to="." method="_on_tank_explosion_area_area_entered"]

@@ -1,0 +1,108 @@
+[gd_scene load_steps=11 format=3 uid="uid://cqpdov5brs3mu"]
+
+[ext_resource type="Texture2D" uid="uid://du6k8dpb316o3" path="res://resources/hudbar_background.png" id="1_oex0u"]
+[ext_resource type="Texture2D" uid="uid://cbckkgtm46txj" path="res://towers/sniper/sprite.png" id="2"]
+[ext_resource type="Theme" uid="uid://ddjgl1u640uyp" path="res://scenes/Hud/HudBar.tres" id="2_ha8rw"]
+[ext_resource type="Texture2D" uid="uid://bb57w0kx6lnwi" path="res://towers/wizzard/sprite.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bqxdbxg0oc62l" path="res://towers/tank/sprite.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dn4h18isg0b1g" path="res://towers/poison/sprite.png" id="5_ju68b"]
+[ext_resource type="Texture2D" uid="uid://cs0oi5q1580cv" path="res://resources/upgrade.png" id="7_l71ms"]
+[ext_resource type="Texture2D" uid="uid://bnlxmix15jpjv" path="res://resources/dig .png" id="9_7xo5g"]
+[ext_resource type="PackedScene" uid="uid://b4o83grsayb0y" path="res://scenes/Wiki.tscn" id="9_87ca1"]
+
+[sub_resource type="GDScript" id="GDScript_14omt"]
+resource_name = "HudScript"
+script/source = "extends Control
+
+var is_hover = false
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+
+
+func _input(event):
+	# Mouse in viewport coordinates.
+	if event is InputEventMouseButton and !is_hover:
+		$ItemList.deselect_all();
+
+
+
+
+func _on_item_list_mouse_entered():
+	is_hover = true
+
+
+func _on_item_list_mouse_exited():
+	is_hover = false
+"
+
+[node name="HudBar" type="Control"]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -98.0
+offset_bottom = -98.0
+grow_horizontal = 2
+grow_vertical = 0
+script = SubResource("GDScript_14omt")
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+autostart = true
+
+[node name="HudbarBackground" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.784314)
+position = Vector2(10, -151)
+scale = Vector2(1.02292, 1.08333)
+texture = ExtResource("1_oex0u")
+
+[node name="ItemList" type="ItemList" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -676.0
+offset_top = -200.0
+offset_right = 676.0
+grow_horizontal = 2
+grow_vertical = 0
+focus_mode = 0
+mouse_filter = 1
+theme = ExtResource("2_ha8rw")
+allow_reselect = true
+auto_height = true
+item_count = 7
+max_columns = 8
+fixed_column_width = 175
+icon_mode = 0
+fixed_icon_size = Vector2i(125, 125)
+item_0/text = ""
+item_0/icon = ExtResource("5")
+item_1/text = ""
+item_1/icon = ExtResource("3")
+item_2/text = ""
+item_2/icon = ExtResource("5_ju68b")
+item_3/text = ""
+item_3/icon = ExtResource("2")
+item_4/text = ""
+item_4/icon = ExtResource("7_l71ms")
+item_5/text = ""
+item_5/icon = ExtResource("7_l71ms")
+item_6/text = ""
+item_6/icon = ExtResource("9_7xo5g")
+
+[node name="Wiki" parent="." instance=ExtResource("9_87ca1")]
+position = Vector2(-1852, -2164)
+
+[connection signal="mouse_entered" from="ItemList" to="." method="_on_item_list_mouse_entered"]
+[connection signal="mouse_exited" from="ItemList" to="." method="_on_item_list_mouse_exited"]

@@ -1,0 +1,196 @@
+{
+	"categories": [
+		{
+			"uuid": "d292e5b8-13cc-47da-b70b-b699fa1b9323",
+			"title": "Task",
+			"color": "f7aaa9"
+		}
+	],
+	"stages": [
+		{
+			"uuid": "0133bab6-ddf2-4d28-93ea-87b97abbf392",
+			"title": "Todo",
+			"tasks": [
+				"81634cb4-17ea-4382-9dad-613975d803d3",
+				"28edc1ce-46ff-48e8-baf6-ccafa64cc4fb",
+				"369880f9-c9c0-4847-ba0c-92a39c124e92",
+				"a808e69b-df9a-43a0-ad92-4ad15a45b9b9",
+				"bc04dc0e-f0fb-4ba2-82aa-34ffe39a9b5a",
+				"45f2d0f9-fa8a-4cde-b9d4-f113f7944161",
+				"a4894764-c314-4f59-9f52-1078ae7b7ca7",
+				"31090e04-4496-41b5-9bda-4fc189518ee1",
+				"ac3257f7-1739-4c38-bdd3-c216ff3c0099",
+				"7765c7cc-890e-4480-bb1e-872de716fee6",
+				"da06a599-d39e-4bbd-8292-c3d911f83823",
+				"20d202ff-a6a2-4c0a-af5d-742fad7630ce",
+				"a5a79f10-f49b-4f77-99b5-8487f0db48c4",
+				"3ce1a809-817e-4019-8949-8b6eedddae54"
+			]
+		},
+		{
+			"uuid": "0c90e91d-9bda-4702-9e2c-52e880b293cd",
+			"title": "Doing",
+			"tasks": [
+				"6523486f-c768-4741-9689-49de8ec2cee7"
+			]
+		},
+		{
+			"uuid": "02ea5640-debb-430e-a674-a460830a09f1",
+			"title": "Done",
+			"tasks": [
+				"2a14c1e8-bf31-4fb0-9710-a3ace918335d",
+				"927d140f-ae95-4a96-949e-390cd95e5d84",
+				"7a8b2504-cd81-4064-a517-3373f6f00c17",
+				"fd1d7a1c-bb79-4243-891e-5a225323cfbd",
+				"0552af04-7524-4e4c-9f46-822f7dd650e6"
+			]
+		}
+	],
+	"tasks": [
+		{
+			"uuid": "6523486f-c768-4741-9689-49de8ec2cee7",
+			"title": "Wikipage",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "369880f9-c9c0-4847-ba0c-92a39c124e92",
+			"title": "Tank VFX",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "81634cb4-17ea-4382-9dad-613975d803d3",
+			"title": "Impl Lost menu",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "7a8b2504-cd81-4064-a517-3373f6f00c17",
+			"title": "Impl Win menu",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "28edc1ce-46ff-48e8-baf6-ccafa64cc4fb",
+			"title": "Global Lighting",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "a808e69b-df9a-43a0-ad92-4ad15a45b9b9",
+			"title": "Tank Animations",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "1779093b-5936-4d9f-a7fc-5456a5df2507",
+			"title": "?Slowdown if enemy was killed",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "2a14c1e8-bf31-4fb0-9710-a3ace918335d",
+			"title": "Freeze Animation",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "927d140f-ae95-4a96-949e-390cd95e5d84",
+			"title": "Freeze",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "bc04dc0e-f0fb-4ba2-82aa-34ffe39a9b5a",
+			"title": "Flip crunchers if it goes backwards",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "45f2d0f9-fa8a-4cde-b9d4-f113f7944161",
+			"title": "Change icons in bar",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "fd1d7a1c-bb79-4243-891e-5a225323cfbd",
+			"title": "Price ui",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "a4894764-c314-4f59-9f52-1078ae7b7ca7",
+			"title": "If enemy killed wizzard change target",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "31090e04-4496-41b5-9bda-4fc189518ee1",
+			"title": "Bloom",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "ac3257f7-1739-4c38-bdd3-c216ff3c0099",
+			"title": "Sounds",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "0552af04-7524-4e4c-9f46-822f7dd650e6",
+			"title": "Lost menu animation",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "7765c7cc-890e-4480-bb1e-872de716fee6",
+			"title": "Win menu animation",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "da06a599-d39e-4bbd-8292-c3d911f83823",
+			"title": "start game animation",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "62edfa67-fcfc-433a-a026-53e8ed8e77e6",
+			"title": "New task",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "20d202ff-a6a2-4c0a-af5d-742fad7630ce",
+			"title": "wasm",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "a5a79f10-f49b-4f77-99b5-8487f0db48c4",
+			"title": "mute button",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		},
+		{
+			"uuid": "3ce1a809-817e-4019-8949-8b6eedddae54",
+			"title": "fullscreen",
+			"description": "",
+			"category": "d292e5b8-13cc-47da-b70b-b699fa1b9323"
+		}
+	],
+	"layout": {
+		"columns": [
+			[
+				"0133bab6-ddf2-4d28-93ea-87b97abbf392"
+			],
+			[
+				"0c90e91d-9bda-4702-9e2c-52e880b293cd"
+			],
+			[
+				"02ea5640-debb-430e-a674-a460830a09f1"
+			]
+		]
+	}
+}

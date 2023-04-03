@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://bv84n4klqfsdl"]
+
+[ext_resource type="Theme" uid="uid://crs1hao114fhj" path="res://resources/theme.tres" id="1_8twxr"]
+[ext_resource type="Texture2D" uid="uid://l6oq5dkxydjq" path="res://resources/coin.png" id="2_2c8wb"]
+
+[sub_resource type="GDScript" id="1"]
+resource_name = "BankScript"
+script/source = "extends Control
+
+@export var money = 500 
+
+func _ready():
+	pass
+func _process(delta):
+	pass
+	$Money.text = str(money)
+"
+
+[node name="Bank" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 96.0
+offset_top = 59.0
+offset_right = 96.0
+offset_bottom = 59.0
+script = SubResource("1")
+
+[node name="Money" type="Label" parent="."]
+layout_mode = 0
+offset_left = 47.0
+offset_top = 19.0
+offset_right = 191.0
+offset_bottom = 55.0
+theme = ExtResource("1_8twxr")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 102
+text = "1000"
+
+[node name="Coin" type="Sprite2D" parent="."]
+position = Vector2(325, 78)
+texture = ExtResource("2_2c8wb")

@@ -1,0 +1,56 @@
+[gd_scene load_steps=12 format=3 uid="uid://c3w0cfrw2x6kt"]
+
+[ext_resource type="Texture2D" uid="uid://3vpt5dqkiik" path="res://resources/wizzard_explosion/1.png" id="1_qikv8"]
+[ext_resource type="Texture2D" uid="uid://naag3k6fllv2" path="res://resources/wizzard_explosion/2.png" id="2_vtrm7"]
+[ext_resource type="Texture2D" uid="uid://d07bjaolo8k30" path="res://resources/wizzard_explosion/3.png" id="3_aiu7c"]
+[ext_resource type="Texture2D" uid="uid://c1178ggnw23nh" path="res://resources/wizzard_explosion/4.png" id="4_kc4iy"]
+[ext_resource type="Texture2D" uid="uid://brejdct2eyfyf" path="res://resources/wizzard_explosion/5.png" id="5_hqrf2"]
+[ext_resource type="Texture2D" uid="uid://cgl45sdcbq2t5" path="res://resources/wizzard_explosion/6.png" id="6_8ulxi"]
+[ext_resource type="Texture2D" uid="uid://cfqidvpcwkxne" path="res://resources/wizzard_explosion/7.png" id="7_xnp83"]
+[ext_resource type="Texture2D" uid="uid://ckcjd8eykevao" path="res://resources/wizzard_explosion/8.png" id="8_hfm38"]
+[ext_resource type="Texture2D" uid="uid://bkly6wccntvdk" path="res://resources/wizzard_explosion/9.png" id="9_c41l3"]
+[ext_resource type="Texture2D" uid="uid://bvjyd32g1fd84" path="res://resources/wizzard_explosion/10.png" id="10_32cuq"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_erwmq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_qikv8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_vtrm7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_aiu7c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_kc4iy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_8ulxi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_hqrf2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_xnp83")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_hfm38")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_c41l3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_32cuq")
+}],
+"loop": true,
+"name": &"boom",
+"speed": 15.0
+}]
+
+[node name="WizzardExplosion" type="AnimatedSprite2D"]
+modulate = Color(0.537255, 1, 0.592157, 1)
+sprite_frames = SubResource("SpriteFrames_erwmq")
+animation = &"boom"
+frame_progress = 0.996242

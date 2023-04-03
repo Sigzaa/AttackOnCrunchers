@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3 uid="uid://shplhiyltflp"]
+
+[ext_resource type="Texture2D" uid="uid://clb4phdp5u6l8" path="res://resources/swamp.png" id="1_dx6p8"]
+[ext_resource type="PackedScene" uid="uid://cegpftk7mtotk" path="res://scenes/Maps/TowerZone.tscn" id="2_hywy5"]
+[ext_resource type="PackedScene" uid="uid://dpcfudaj8kilw" path="res://scenes/Maps/dead_zone.tscn" id="3_xmbd7"]
+
+[sub_resource type="Curve2D" id="Curve2D_6pqxn"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -1, 770, 0, 0, 0, 0, 456, 735, 0, 0, 0, 0, 772, 750, 0, 0, 0, 0, 975, 881, 0, 0, 0, 0, 1131, 1058, 0, 0, 0, 0, 1276, 1274, 0, 0, 0, 0, 1477, 1474, 0, 0, 0, 0, 1814, 1617, 0, 0, 0, 0, 2103, 1575, 0, 0, 0, 0, 2258, 1389, 0, 0, 0, 0, 2181, 1168, 0, 0, 0, 0, 2001, 999, 0, 0, 0, 0, 1860, 843, 0, 0, 0, 0, 1860, 693, 0, 0, 0, 0, 2079, 589, 0, 0, 0, 0, 2341, 635, 0, 0, 0, 0, 2602, 754, 0, 0, 0, 0, 2789, 902, 0, 0, 0, 0, 2983, 1045, 0, 0, 0, 0, 3217, 1158, 0, 0, 0, 0, 3506, 1239, 0, 0, 0, 0, 4104, 1229)
+}
+point_count = 22
+
+[node name="Map#2" type="Node"]
+
+[node name="Swamp" type="Sprite2D" parent="."]
+position = Vector2(1920, 1080)
+texture = ExtResource("1_dx6p8")
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource("Curve2D_6pqxn")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D" groups=["enemy_path"]]
+position = Vector2(-1, 770)
+rotation = -0.0764372
+cubic_interp = false
+loop = false
+
+[node name="132157" type="Timer" parent="Path2D/PathFollow2D"]
+wait_time = 0.2
+one_shot = true
+
+[node name="DeadZone" parent="." instance=ExtResource("3_xmbd7")]
+position = Vector2(4036, 1235)
+
+[node name="TowerZone" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(1880, 1316)
+
+[node name="TowerZone2" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(2478, 995)
+
+[node name="TowerZone3" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(2926, 1366)
+
+[node name="TowerZone5" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(1736, 1778)
+
+[node name="TowerZone6" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(3510, 999)
+
+[node name="TowerZone7" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(328, 1012)
+
+[node name="TowerZone9" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(770, 1154)
+
+[node name="TowerZone8" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(1630, 687)
+
+[node name="TowerZone4" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(1584, 1104)

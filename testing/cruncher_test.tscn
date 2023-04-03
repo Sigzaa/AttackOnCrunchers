@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://cfxgu158ei1d7"]
+
+[ext_resource type="Texture2D" uid="uid://bl6andsq4t1be" path="res://resources/монстр4.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dr11h8wcjjvw6" path="res://resources/монстр3.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bj78tbgmqgc8e" path="res://resources/монстр2.png" id="3"]
+
+[sub_resource type="SpriteFrames" id="1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[node name="Cruncher" type="AnimatedSprite2D"]
+position = Vector2(-1, 0)
+sprite_frames = SubResource("1")
+frame = 3

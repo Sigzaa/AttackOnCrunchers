@@ -1,0 +1,188 @@
+[gd_scene load_steps=16 format=3 uid="uid://ctj0340gayu3j"]
+
+[ext_resource type="PackedScene" uid="uid://cfxgu158ei1d7" path="res://testing/cruncher_test.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_qxxua"]
+[ext_resource type="Texture2D" uid="uid://bj78tbgmqgc8e" path="res://resources/монстр2.png" id="2_nfbd8"]
+[ext_resource type="Texture2D" uid="uid://dr11h8wcjjvw6" path="res://resources/монстр3.png" id="3_4mues"]
+[ext_resource type="Texture2D" uid="uid://bl6andsq4t1be" path="res://resources/монстр4.png" id="4_7rd31"]
+[ext_resource type="PackedScene" uid="uid://blxuim6nolher" path="res://scenes/enemy_hp.tscn" id="5_vhl5n"]
+[ext_resource type="Theme" uid="uid://crs1hao114fhj" path="res://resources/theme.tres" id="6_qtsxp"]
+
+[sub_resource type="Animation" id="Animation_44glu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_vocbi"]
+resource_name = "Walk"
+length = 1.0004
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1),
+"transitions": PackedFloat32Array(2.07053, 0.535887, 2.2974, 0.378929, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -3), Vector2(0, 0), Vector2(0, -3), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3pr5e"]
+_data = {
+"RESET": SubResource("Animation_44glu"),
+"Walk": SubResource("Animation_vocbi")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xapn2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_nfbd8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_4mues")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_7rd31")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_4mues")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="GDScript" id="3"]
+resource_name = "CruncherColliderScript"
+script/source = "extends Area2D
+
+
+func _ready():
+	pass
+
+
+func _on_Area2D_body_entered(body):
+	
+	if body.is_in_group(\"tank_projectile\"):
+		get_parent().hp -= 10
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_is82i"]
+size = Vector2(100, 150)
+
+[sub_resource type="Animation" id="Animation_hs31b"]
+resource_name = "take_dmg"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TakeDmg:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(0.112656, 1),
+"update": 0,
+"values": [Vector2(60, -70), Vector2(60, -200)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TakeDmg:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.7),
+"transitions": PackedFloat32Array(1, 2.2974, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.7),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ckmmk"]
+_data = {
+"take_dmg": SubResource("Animation_hs31b")
+}
+
+[node name="Cruncher" type="Node2D" groups=["cruncher"]]
+script = ExtResource("1_qxxua")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_3pr5e")
+}
+
+[node name="Sprite" parent="." instance=ExtResource("1")]
+sprite_frames = SubResource("SpriteFrames_xapn2")
+frame = 0
+
+[node name="CruncherHitBox" type="Area2D" parent="." groups=["cruncher_collision"]]
+collision_layer = 524817
+collision_mask = 67073
+script = SubResource("3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CruncherHitBox"]
+shape = SubResource("RectangleShape2D_is82i")
+debug_color = Color(0, 0.639216, 0.368627, 0.419608)
+
+[node name="Board" parent="." instance=ExtResource("5_vhl5n")]
+position = Vector2(0, -124)
+
+[node name="TakeDmg" type="Label" parent="."]
+offset_left = 60.0
+offset_top = -70.0
+offset_right = 113.0
+offset_bottom = -34.0
+theme = ExtResource("6_qtsxp")
+theme_override_colors/font_color = Color(1, 0, 0, 0.568627)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.494118)
+theme_override_constants/outline_size = 9
+text = "
+"
+
+[node name="DmgPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ckmmk")
+}
+
+[connection signal="body_entered" from="CruncherHitBox" to="CruncherHitBox" method="_on_Area2D_body_entered"]

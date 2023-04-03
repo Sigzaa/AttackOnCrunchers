@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://ww0xo28coar2"]
+
+[ext_resource type="Texture2D" uid="uid://bnlxmix15jpjv" path="res://resources/dig .png" id="1_dlbvs"]
+
+[sub_resource type="GDScript" id="2"]
+script/source = "extends Sprite2D
+				
+				
+@onready var bank = get_node(\"../Bank\")
+
+func _ready():
+	for core in get_tree().get_nodes_in_group(\"core\"):
+		await get_tree().create_timer(0.1).timeout;
+		core.show_remove();
+
+func _process(delta):
+		
+	for area in $Area2D.get_overlapping_areas():
+		if area.is_in_group(\"tower_collider\"):
+			
+			var core = area.get_parent()
+			
+			if true:
+				modulate.b = 1
+				modulate.g = 1
+			
+				if Input.is_mouse_button_pressed(1):
+					
+					bank.money += core.remove_cash_back
+					core.get_parent().queue_free()
+					self.queue_free()
+
+			
+		else:
+			modulate.b = 0.3
+			modulate.g = 0.3
+	
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4ps3x"]
+radius = 56.0
+
+[node name="RemoveGhost" type="Sprite2D" groups=["ghost", "modifier"]]
+z_index = 5
+texture = ExtResource("1_dlbvs")
+script = SubResource("2")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_4ps3x")

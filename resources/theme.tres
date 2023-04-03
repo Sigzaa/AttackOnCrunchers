@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://crs1hao114fhj"]
+
+[ext_resource type="FontFile" uid="uid://bjp5w0apflpln" path="res://resources/upheavtt.ttf" id="1_amlla"]
+
+[resource]
+default_font = ExtResource("1_amlla")
+default_font_size = 36

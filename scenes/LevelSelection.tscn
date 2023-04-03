@@ -1,0 +1,116 @@
+[gd_scene load_steps=3 format=3 uid="uid://binljeh3tujpw"]
+
+[ext_resource type="Theme" uid="uid://crs1hao114fhj" path="res://resources/theme.tres" id="1_oyrya"]
+
+[sub_resource type="GDScript" id="1"]
+resource_name = "LevelSelectionScript"
+script/source = "extends Control
+
+var Level_1 = preload(\"res://scenes/Levels/Level#1.tscn\")
+var Level_2 = preload(\"res://scenes/Levels/Level#2.tscn\")
+var Level_3 = preload(\"res://scenes/Levels/Level#3.tscn\")
+var Level_4 = preload(\"res://scenes/Levels/Level#4.tscn\")
+#var CustomLevel = preload(\"res://scenes/Levels/CustomLevel.tscn\")
+
+func _ready():
+	pass
+
+func _process(delta):
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		self.queue_free()
+		get_tree().change_scene_to_file(\"res://scenes/MainMenu.tscn\")
+
+func _load_level(level):
+	var level_instance = level.instantiate()
+	get_parent().add_child(level_instance)
+	self.queue_free()
+
+func _on_Button1_pressed():
+	_load_level(Level_1)
+
+
+func _on_Button2_pressed():
+	_load_level(Level_2)
+
+
+func _on_Button3_pressed():
+	_load_level(Level_3)
+
+
+func _on_Button4_pressed():
+	_load_level(Level_4)
+
+
+func _on_Button5_pressed():
+	pass # Replace with function body.
+"
+
+[node name="LevelSelection" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("1")
+
+[node name="Button1" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 823.095
+offset_top = 984.885
+offset_right = -2700.9
+offset_bottom = -883.115
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_oyrya")
+text = "1"
+
+[node name="Button2" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1532.0
+offset_top = 988.0
+offset_right = -1974.0
+offset_bottom = -886.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_oyrya")
+text = "2"
+
+[node name="Button3" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2210.0
+offset_top = 991.0
+offset_right = -1301.0
+offset_bottom = -904.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_oyrya")
+text = "3"
+
+[node name="Button4" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2870.38
+offset_top = 995.698
+offset_right = -661.616
+offset_bottom = -882.302
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_oyrya")
+text = "4"
+
+[connection signal="pressed" from="Button1" to="." method="_on_Button1_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
+[connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]
+[connection signal="pressed" from="Button4" to="." method="_on_Button4_pressed"]

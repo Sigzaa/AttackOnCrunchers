@@ -1,0 +1,194 @@
+[gd_scene load_steps=11 format=3 uid="uid://c8524jj2kovfs"]
+
+[ext_resource type="PackedScene" uid="uid://bb5t63hsxvciu" path="res://scenes/Core.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://dyw215ebiyb00" path="res://towers/wizzard/attack/маг1.png" id="2_bstog"]
+[ext_resource type="Texture2D" uid="uid://dfkv5xtsrhfm7" path="res://towers/wizzard/attack/маг2.png" id="3_jw6h6"]
+[ext_resource type="Texture2D" uid="uid://dj15cwptcoc6s" path="res://towers/wizzard/attack/маг3.png" id="4_3yool"]
+[ext_resource type="Texture2D" uid="uid://dusyptcruhee7" path="res://towers/wizzard/attack/маг4.png" id="5_mgic4"]
+
+[sub_resource type="GDScript" id="GDScript_bpnio"]
+resource_name = "Wizzard"
+script/source = "extends Node2D
+
+@onready var anim = $Anim;
+@onready var core = $Core;
+var Projectile = preload(\"res://towers/wizzard/projectile.tscn\")
+var proj_inst_gl;
+var dmg_coef = 3;
+var slow_down_coef = 0.2;
+
+func _ready():
+	anim.play(\"default\")
+
+func wiki() -> Array:
+	var slow_base = Projectile.instantiate().slow_down;
+	var dmg_base = Projectile.instantiate().dmg;
+	return [
+		$Core.get_cd(),
+		$Core.get_distance(),
+		[
+			\"SlowDuration: \", 
+			slow_base + slow_down_coef * 1,
+			slow_base + slow_down_coef * 2,
+			slow_base + slow_down_coef * 3,
+			slow_base + slow_down_coef * 4
+		],
+		[
+			\"Dmg: \", 
+			dmg_base + dmg_coef * 1, 
+			dmg_base + dmg_coef * 2, 
+			dmg_base + dmg_coef * 3, 
+			dmg_base + dmg_coef * 4],
+		
+	]
+
+func _process(delta):
+	return;
+	if core.placed and !core.cruncher_detected():
+		#sprite.float_sin(delta);
+		#$AnimationPlayer.play(\"Idle\");
+		anim.play(\"default\");
+		pass
+		
+	if core.cruncher_detected() and core.placed:
+		#$AnimationPlayer.play(\"LightLeft\");
+		pass
+	
+
+func _instance(instance):
+	add_sibling(instance, true)
+
+func shoot():
+	_instance(proj_inst_gl);
+	
+func fire(enemy):
+	
+	var proj_inst = Projectile.instantiate()
+	proj_inst.position = get_position();
+	
+	proj_inst.enemy = enemy;
+	proj_inst.dmg += dmg_coef * core.level;
+	proj_inst.slow_down += slow_down_coef * core.level;
+	proj_inst_gl = proj_inst;
+	anim.play(\"attack\"); 
+
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7qgn0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_bstog")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_bstog")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_jw6h6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_jw6h6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_3yool")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_mgic4")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_bstog")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_glf42"]
+resource_name = "attack"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [&"attack", 1.0, false],
+"method": &"play"
+}, {
+"args": [&"default", 1.0, false],
+"method": &"play"
+}]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("..")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.9),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"shoot"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_iruse"]
+resource_name = "default"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"default", 1.0, false],
+"method": &"play"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xwrcv"]
+_data = {
+"attack": SubResource("Animation_glf42"),
+"default": SubResource("Animation_iruse")
+}
+
+[node name="Wizzard" type="Node2D" groups=["ghost"]]
+process_mode = 1
+script = SubResource("GDScript_bpnio")
+
+[node name="Core" parent="." node_paths=PackedStringArray("tower_sprite") groups=["tower"] instance=ExtResource("2")]
+outer_scale = 2
+lvl_cd = 0.1
+lvl_distance = 1.5
+tower_sprite = NodePath("../AnimSprite")
+
+[node name="ShootCD" type="Timer" parent="."]
+wait_time = 4.0
+autostart = true
+
+[node name="AnimSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -35)
+scale = Vector2(1.2, 1.2)
+sprite_frames = SubResource("SpriteFrames_7qgn0")
+animation = &"attack"
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+root_node = NodePath("../AnimSprite")
+libraries = {
+"": SubResource("AnimationLibrary_xwrcv")
+}
+
+[connection signal="animation_finished" from="AnimSprite" to="." method="_on_anim_animation_finished"]

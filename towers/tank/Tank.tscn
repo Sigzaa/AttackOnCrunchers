@@ -1,0 +1,345 @@
+[gd_scene load_steps=24 format=3 uid="uid://d2hesb8yr0456"]
+
+[ext_resource type="Texture2D" uid="uid://bqxdbxg0oc62l" path="res://towers/tank/sprite.png" id="1"]
+[ext_resource type="PackedScene" uid="uid://bb5t63hsxvciu" path="res://scenes/Core.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://dxlm446m0kp0a" path="res://towers/tank/shadow.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bx73u7u2j0nb" path="res://resources/white_circle.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c1d5078wgbgat" path="res://resources/rect.png" id="5"]
+
+[sub_resource type="GDScript" id="2"]
+script/source = "extends Node2D
+
+@onready var sprite = $Sprite2D;
+@onready var core = $Core;
+var Projectile = preload(\"res://towers/TankProjectile.tscn\")
+
+var dmg_coeff = 4;
+
+func _ready():
+	pass
+	
+func wiki() -> Array:
+	var dmg_base = Projectile.instantiate().dmg;
+	return [
+		$Core.get_cd(),
+		$Core.get_distance(),
+		[\"Dmg: \", dmg_base + dmg_coeff * 1, dmg_base + dmg_coeff * 2, dmg_base + dmg_coeff * 3, dmg_base + dmg_coeff * 4],
+		
+	]
+
+func _process(delta):
+
+	if core.placed:
+		#sprite.float_sin(delta);
+		$Anime/AnimationPlayer.play(\"Idle\");
+		pass
+	
+
+func _instance(instance):
+	add_sibling(instance, true)
+
+	
+func fire(enemy):
+	
+	var proj_inst = Projectile.instantiate()
+	proj_inst.position = get_position();
+	proj_inst.target = enemy.position;
+	proj_inst.dmg += dmg_coeff * core.level;
+	_instance(proj_inst)
+	
+	#sprite.fire_shake(linear_velocity);
+
+
+
+"
+
+[sub_resource type="GDScript" id="3"]
+script/source = "extends Sprite2D
+
+var floating_locked = false;
+var last_pos = 0.0;
+var sin_in = 0.0;
+
+func fire_shake(linear_velocity):
+	floating_locked = true
+	#$In.interpolate_property(self, 'position', position, - linear_velocity * 20, 0.1, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	#$In.start()
+
+func float_sin(delta): 
+	if !floating_locked:
+		last_pos = sin(sin_in) * 3.0;
+		sin_in += delta * 2.0;
+		position.y = last_pos;
+		
+func charge_gun():
+	get_parent().get_node(\"../AnimationPlayer\").play(\"LightLeft\");
+
+func _on_In_tween_all_completed():
+	#$Out.interpolate_property(self, 'position', position, Vector2(0.0, last_pos), 0.5, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	#$Out.start()
+	pass
+
+func _on_Out_tween_all_completed():
+	floating_locked = false # Replace with function body.
+"
+
+[sub_resource type="Environment" id="6"]
+background_mode = 3
+background_energy_multiplier = 4.36
+glow_enabled = true
+glow_intensity = 2.25
+glow_strength = 0.42
+glow_blend_mode = 0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mnk3v"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4dkgx"]
+animation = &"FireLeft"
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_a4vv5"]
+filters = [".", "../GPUParticles2D:emitting", "../GPUParticles2D:process_material:emission_ring_height", ".:flip_h", ".:offset:x", ".:offset:y", ".:position", "WhiteCircle:modulate"]
+sync = true
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_3s4vh"]
+graph_offset = Vector2(-275.926, 64.9949)
+nodes/Idle/node = SubResource("AnimationNodeAnimation_mnk3v")
+nodes/Idle/position = Vector2(-57.1429, 125.714)
+nodes/Light/node = SubResource("AnimationNodeAnimation_4dkgx")
+nodes/Light/position = Vector2(-57.1429, 285.714)
+nodes/OneShot/node = SubResource("AnimationNodeOneShot_a4vv5")
+nodes/OneShot/position = Vector2(171.429, 137.143)
+nodes/output/position = Vector2(342.857, 137.143)
+node_connections = [&"output", 0, &"OneShot", &"OneShot", 0, &"Idle", &"OneShot", 1, &"Light"]
+
+[sub_resource type="CanvasItemMaterial" id="10"]
+
+[sub_resource type="Gradient" id="Gradient_5ipg4"]
+offsets = PackedFloat32Array(0, 0.853755, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.764758, 0.205189, 0.155925, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dgkbn"]
+gradient = SubResource("Gradient_5ipg4")
+
+[sub_resource type="ParticleProcessMaterial" id="7"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 250.0
+emission_ring_radius = 500.0
+emission_ring_inner_radius = 490.0
+gravity = Vector3(0, 0, 0)
+radial_accel_min = -2000.0
+color_ramp = SubResource("GradientTexture1D_dgkbn")
+turbulence_enabled = true
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m0irv"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 103.68
+initial_velocity_max = 103.68
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+
+[sub_resource type="Animation" id="4"]
+resource_name = "FireLeft"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WhiteCircle:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.9, 3),
+"transitions": PackedFloat32Array(1.56917, 4.28709, 6.49801),
+"update": 0,
+"values": [Color(2, 0.568627, 0.501961, 0), Color(2, 0.8, 0.8, 1), Color(2, 0.501961, 0.501961, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Anime/GPUParticles2D:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.3, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Anime/GPUParticles2D:process_material:emission_ring_height")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(3),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [250.0]
+}
+
+[sub_resource type="Animation" id="Animation_vklb4"]
+resource_name = "FireShake"
+
+[sub_resource type="Animation" id="Animation_yjtxp"]
+resource_name = "Idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(-2, 0.965937, -2),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -10), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_juiiv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Anime/GPUParticles2D:process_material:emission_ring_height")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [250.0]
+}
+
+[sub_resource type="Animation" id="5"]
+resource_name = "Test"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"values": []
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:offset:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:offset:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_36nx8"]
+_data = {
+"FireLeft": SubResource("4"),
+"FireShake": SubResource("Animation_vklb4"),
+"Idle": SubResource("Animation_yjtxp"),
+"RESET": SubResource("Animation_juiiv"),
+"Test": SubResource("5")
+}
+
+[node name="TankGhost" type="Node2D" groups=["ghost", "tower"]]
+script = SubResource("2")
+
+[node name="Core" parent="." node_paths=PackedStringArray("tower_sprite") groups=["tower"] instance=ExtResource("2")]
+z_index = 1
+upgrade_cost = 120
+outer_scale = 3
+lvl_cd = 0.3
+tower_sprite = NodePath("../Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 4
+position = Vector2(0, -0.207634)
+texture = ExtResource("1")
+script = SubResource("3")
+
+[node name="WhiteCircle" type="Sprite2D" parent="Sprite2D"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-61.2734, -2.85596)
+rotation = -0.15
+scale = Vector2(0.00279151, 0.00498199)
+skew = 0.0680678
+texture = ExtResource("4")
+offset = Vector2(-55.499, 131.466)
+
+[node name="Shadow" type="Sprite2D" parent="."]
+texture = ExtResource("3")
+
+[node name="Shake" type="Timer" parent="."]
+wait_time = 0.3
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("6")
+
+[node name="Anime" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeBlendTree_3s4vh")
+anim_player = NodePath("AnimationPlayer")
+active = true
+parameters/OneShot/active = false
+parameters/OneShot/request = 0
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Anime"]
+z_index = 7
+material = SubResource("10")
+position = Vector2(-19, -0.999999)
+scale = Vector2(0.09, 0.09)
+emitting = false
+process_material = SubResource("7")
+texture = ExtResource("5")
+lifetime = 1.2
+one_shot = true
+local_coords = true
+
+[node name="FireBurst" type="GPUParticles2D" parent="Anime"]
+visible = false
+z_index = 4
+position = Vector2(-18.9732, -0.359447)
+rotation = 2.4644
+scale = Vector2(0.1, 0.1)
+process_material = SubResource("ParticleProcessMaterial_m0irv")
+texture = ExtResource("5")
+lifetime = 0.3
+explosiveness = 0.97
+fixed_fps = 60
+local_coords = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Anime"]
+root_node = NodePath("../../Sprite2D")
+libraries = {
+"": SubResource("AnimationLibrary_36nx8")
+}

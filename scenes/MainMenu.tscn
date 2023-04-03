@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwwxow3b8iwux"]
+
+[ext_resource type="Theme" uid="uid://crs1hao114fhj" path="res://resources/theme.tres" id="1_vbqqx"]
+
+[sub_resource type="GDScript" id="1"]
+resource_name = "MainMenuScript"
+script/source = "extends Control
+
+var LevelSelection = preload(\"res://scenes/LevelSelection.tscn\")
+
+func _ready():
+	pass
+
+
+func _on_PlayButton_pressed():
+	var level_slection_inst = LevelSelection.instantiate()
+	get_parent().add_child(level_slection_inst)
+	self.queue_free()
+	
+"
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("1")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -139.0
+offset_top = -250.0
+offset_right = 139.0
+offset_bottom = -214.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_vbqqx")
+theme_override_font_sizes/font_size = 182
+text = "Tower Defence"
+
+[node name="PlayButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.5
+offset_top = 186.0
+offset_right = 230.5
+offset_bottom = 310.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_vbqqx")
+text = "Play"
+
+[connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]

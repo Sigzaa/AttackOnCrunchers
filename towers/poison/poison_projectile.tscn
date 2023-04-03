@@ -1,0 +1,211 @@
+[gd_scene load_steps=21 format=3 uid="uid://bvi82a6ilhmdq"]
+
+[ext_resource type="Texture2D" uid="uid://3vpt5dqkiik" path="res://resources/wizzard_explosion/1.png" id="1_oo6ep"]
+[ext_resource type="Texture2D" uid="uid://naag3k6fllv2" path="res://resources/wizzard_explosion/2.png" id="2_ufgor"]
+[ext_resource type="Texture2D" uid="uid://d07bjaolo8k30" path="res://resources/wizzard_explosion/3.png" id="3_7u5rf"]
+[ext_resource type="Texture2D" uid="uid://c1178ggnw23nh" path="res://resources/wizzard_explosion/4.png" id="4_4fyfx"]
+[ext_resource type="Texture2D" uid="uid://brejdct2eyfyf" path="res://resources/wizzard_explosion/5.png" id="5_ocxqi"]
+[ext_resource type="Texture2D" uid="uid://cgl45sdcbq2t5" path="res://resources/wizzard_explosion/6.png" id="6_xfu0j"]
+[ext_resource type="Texture2D" uid="uid://cfqidvpcwkxne" path="res://resources/wizzard_explosion/7.png" id="7_pp7s8"]
+[ext_resource type="Texture2D" uid="uid://ckcjd8eykevao" path="res://resources/wizzard_explosion/8.png" id="8_a56mo"]
+[ext_resource type="Texture2D" uid="uid://bkly6wccntvdk" path="res://resources/wizzard_explosion/9.png" id="9_x63tj"]
+[ext_resource type="Texture2D" uid="uid://bvjyd32g1fd84" path="res://resources/wizzard_explosion/10.png" id="10_kds1q"]
+
+[sub_resource type="GDScript" id="GDScript_hb2af"]
+script/source = "extends Node2D
+
+var PoisonedParticles = preload(\"res://towers/poison/PoisonParticles.tscn\");
+var target: Vector2;
+var dmg: int;
+var poison_dmg: int;
+var poison_duration: int;
+var speed = 800;
+
+func _process(delta):
+	
+	var direction = position.direction_to(target).normalized();
+	position += direction * delta * speed;
+	look_at(target);
+	
+
+
+func _on_poison_proj_area_area_entered(area):
+	var cruncher = area.get_parent();
+	if cruncher.is_in_group(\"cruncher\"):
+		$AnimationPlayer.play(\"explode\");
+		cruncher.take_dmg(dmg);
+		
+		#if !cruncher.is_in_group(\"poisoned\"):
+		cruncher.add_child(PoisonedParticles.instantiate(), false)
+			#cruncher.add_to_group(\"poisoned\");
+		for i in range(poison_duration):
+			await get_tree().create_timer(1).timeout;
+			if cruncher != null:
+				cruncher.take_dmg(poison_dmg);
+		if cruncher != null:
+			for child in cruncher.get_children():
+				if child.is_in_group(\"poisoned_marked\"):
+					child.queue_free();
+		queue_free()
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_htw5o"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"clean",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_oo6ep")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ufgor")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_7u5rf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_4fyfx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ocxqi")
+}, {
+"duration": 1.5,
+"texture": ExtResource("6_xfu0j")
+}, {
+"duration": 2.5,
+"texture": ExtResource("7_pp7s8")
+}, {
+"duration": 2.5,
+"texture": ExtResource("8_a56mo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_x63tj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_kds1q")
+}],
+"loop": false,
+"name": &"explode",
+"speed": 15.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_264ge"]
+offsets = PackedFloat32Array(0, 0.867624, 0.988836)
+colors = PackedColorArray(0, 0.403922, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_7iic3"]
+gradient = SubResource("Gradient_264ge")
+
+[sub_resource type="Curve" id="Curve_owdhq"]
+max_value = 2.0
+_data = [Vector2(0, 0.625344), 0.0, 0.0, 0, 0, Vector2(0.464925, 1.88981), 0.0, 0.0, 0, 0, Vector2(0.973881, 0.498623), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_et055"]
+curve = SubResource("Curve_owdhq")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v6hh8"]
+particle_flag_disable_z = true
+spread = 5.0
+gravity = Vector3(0, 1000, 0)
+initial_velocity_min = 1000.0
+initial_velocity_max = 1000.0
+angular_velocity_min = -529.47
+angular_velocity_max = 369.03
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+angle_min = 303.0
+angle_max = 303.0
+scale_min = 2.0
+scale_max = 5.0
+scale_curve = SubResource("CurveTexture_et055")
+color = Color(0, 1, 0.486275, 1)
+color_ramp = SubResource("GradientTexture1D_7iic3")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_574ft"]
+radius = 36.0139
+
+[sub_resource type="Animation" id="Animation_fr1fn"]
+resource_name = "explode"
+length = 0.1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"explode", 1.0, false],
+"method": &"play"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PoisonProjArea:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PoisonProjArea:monitorable")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rr3sc"]
+_data = {
+"explode": SubResource("Animation_fr1fn")
+}
+
+[node name="PoisonProjectile" type="Node2D"]
+script = SubResource("GDScript_hb2af")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+modulate = Color(0, 0.745098, 0.352941, 1)
+position = Vector2(-3, 0)
+sprite_frames = SubResource("SpriteFrames_htw5o")
+animation = &"clean"
+
+[node name="Ball" type="Polygon2D" parent="."]
+scale = Vector2(0.2, 0.2)
+color = Color(0.101961, 0.572549, 0.360784, 1)
+polygon = PackedVector2Array(-41, 12, -27, 30, -9, 39, 14, 40, 37, 35, 52, 20, 59, -1, 56, -25, 44, -46, 23, -58, 1, -59, -14, -54, -29, -45, -40, -28, -45, -9)
+
+[node name="Blick" type="Polygon2D" parent="Ball"]
+color = Color(1, 1, 1, 0.462745)
+polygon = PackedVector2Array(1, -49, -12, -43, -17, -34, -18, -18, -10, -6, 8, 2, 23, 0, 35, -12, 36, -29, 28, -41, 19, -47)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Ball"]
+rotation = 3.05421
+process_material = SubResource("ParticleProcessMaterial_v6hh8")
+
+[node name="PoisonProjArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PoisonProjArea"]
+shape = SubResource("CircleShape2D_574ft")
+debug_color = Color(0.376471, 0.478431, 0.996078, 0.419608)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rr3sc")
+}
+
+[connection signal="area_entered" from="PoisonProjArea" to="." method="_on_poison_proj_area_area_entered"]

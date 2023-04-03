@@ -1,0 +1,569 @@
+[gd_scene load_steps=13 format=3 uid="uid://bb5t63hsxvciu"]
+
+[ext_resource type="Texture2D" uid="uid://d2a8ojwt2d6oi" path="res://towers/distance_range_circle.png" id="1"]
+[ext_resource type="FontFile" uid="uid://bjp5w0apflpln" path="res://resources/upheavtt.ttf" id="1_l0jgn"]
+
+[sub_resource type="GDScript" id="1"]
+resource_name = "TowerCoreScript"
+script/source = "extends Node2D
+
+@export var level = 1
+
+@export var shooting_cd = 2.0
+
+@export var tower_cost = 50
+
+@export var upgrade_cost = 100
+
+@export var downgrade_cash_back = 50
+
+@export var remove_cash_back = 50
+
+@export var outer_scale = 1
+
+@export var lvl_cd = 1.0
+
+@export var lvl_distance = 0.0;
+
+var mouse_hovering = false
+
+@onready var detector = $Description/DistanceRange/Detecter;
+
+@onready var parent = get_parent();
+@export var tower_sprite: Node2D;
+@export var shake_offset: float;
+@onready var desc = $Description;
+@onready var bank = get_node(\"../../Bank\");
+@onready var DistanceRange = $Description/DistanceRange;
+
+signal enemy_entered;
+signal last_enemy_exited;
+
+@onready var cd = $ShootCD;
+var placed = false
+
+const MAX_DISTANCE = Vector2(99999.9, 99999.9)
+func get_enemy():
+	for area in detector.get_overlapping_areas():
+		var cruncher = area.get_parent();
+		if cruncher.is_in_group(\"cruncher\") and cruncher != null:
+			return cruncher;
+
+func get_cd() -> Array:
+	return [
+		\"Reload: \",
+		str(shooting_cd - lvl_cd * 0) + \"s\",
+		str(shooting_cd - lvl_cd * 1) + \"s\",
+		str(shooting_cd - lvl_cd * 2) + \"s\",
+		str(shooting_cd - lvl_cd * 3) + \"s\"
+		];
+func get_distance() -> Array:
+	return [
+		\"Distance: \",
+		str((outer_scale + 0 * lvl_distance) * 3) + \"m\",
+		str((outer_scale + 1 * lvl_distance) * 3) + \"m\",
+		str((outer_scale + 2 * lvl_distance) * 3) + \"m\",
+		str((outer_scale + 3 * lvl_distance) * 3) + \"m\",
+	]
+	
+func show_lvl_upgrade():
+	desc.showing_lvl = true;
+	var label = $Description/Reload;
+	$Description/DistanceRange/AnimationPlayer.play(\"ShowLevel\");
+	if level == 4:
+		label.text = \"\\nMAX: 5\";
+	else:
+		if upgrade_cost > bank.money:
+			label.self_modulate = Color(1, 0.5893, 0.5893, 1)
+		label.text = \"cost: \" + str(upgrade_cost) + '\\n' + str(level) + str(\" > \") + str(level+1);
+
+func show_lvl_downgrade():
+	desc.showing_lvl = true;
+	var label = $Description/Reload;
+	$Description/DistanceRange/AnimationPlayer.play(\"ShowLevel\");
+	if level == 1:
+		label.text = \"\\nMIN\";
+	else:
+		label.text = \"profit: \" + str(downgrade_cash_back) + '\\n' + str(level) + str(\" > \") + str(level-1);
+
+func show_remove():
+	desc.showing_lvl = true;
+	var label = $Description/Reload;
+	$Description/DistanceRange/AnimationPlayer.play(\"ShowLevel\");
+	label.text = \"\\nremove: \" + str(downgrade_cash_back * level);
+
+
+func _ready():
+	parent.set_process(false);
+	DistanceRange.scale = Vector2(outer_scale, outer_scale);
+	#$Description/DistanceRange.scale = Vector2(shooting_distance, shooting_distance)/(200.0 * scale.x)
+
+func place(new_position):
+	get_parent().remove_from_group(\"ghost\")
+	get_parent().global_position = new_position
+	#$Description.hide()
+	
+	
+	$Description/DistanceRange/AnimationPlayer.play(\"HideRadius\");
+	placed = true
+	parent.set_process(true);
+	
+func detect_cruncher():
+	
+	var closest_position = MAX_DISTANCE
+	var closest_cruncher;
+	
+	for cruncher in get_tree().get_nodes_in_group(\"cruncher\"):
+		if position.distance_to(cruncher.position) < position.distance_to(closest_position):
+			closest_position = cruncher.position;
+			closest_cruncher = cruncher;
+	
+	return closest_cruncher
+func _change_distance():
+	DistanceRange.scale = Vector2(outer_scale + (level - 1) * lvl_distance, outer_scale + (level - 1) * lvl_distance);
+
+func _process(delta):
+	_change_distance();
+	if desc.showing_lvl:
+		var is_there = false;
+		for core in get_tree().get_nodes_in_group(\"modifier\"):
+			is_there = true;
+		
+		if !is_there:
+			desc.showing_lvl = false;
+			$Description/DistanceRange/AnimationPlayer.play_backwards(\"ShowLevel\");
+			
+	
+	
+	if !placed:
+		$Description/Lvl.text = str(\"Cost: \" + str(tower_cost));
+	
+	tower_sprite.offset = Vector2(0., shake_offset);
+	if detector.has_overlapping_areas():
+		if cd.time_left <= 0.0:
+			cd.start(shooting_cd - lvl_cd * (level - 1));
+
+func _on_ShootCD_timeout():
+	
+	for area in detector.get_overlapping_areas():
+		get_parent().fire(area.get_parent());
+		return;
+
+
+func _on_Area2D_mouse_entered():
+	mouse_hovering = true
+
+
+func _on_Area2D_mouse_exited():
+	mouse_hovering = false
+
+
+func _on_animation_player_animation_finished(anim_name):
+	pass # Replace with function body.
+
+var no_one = true;
+
+func _on_detecter_area_entered(area):
+	if area.get_parent().is_in_group(\"cruncher\") and no_one:
+		enemy_entered.emit();
+				
+
+
+func _on_detecter_area_exited(area):
+	for entity in detector.get_overlapping_areas():
+		if entity.get_parent().is_in_group(\"cruncher\"):
+			return;
+	if area.get_parent().is_in_group(\"cruncher\"):
+		no_one = true;
+		last_enemy_exited.emit();
+"
+
+[sub_resource type="GDScript" id="4"]
+resource_name = "DescriptionScript"
+script/source = "extends Node2D
+
+@onready var player = $DistanceRange/AnimationPlayer
+@onready var core = get_node(\"../../Core\")
+@onready var timer = get_node(\"../ShootCD\")
+var showing_lvl = false;
+func _ready():
+	pass
+
+func _process(delta):
+	if core.placed == false:
+		return
+	if !showing_lvl:
+		$Reload.text = str(int(timer.time_left))
+	$Lvl.text = \"Lvl \" + str(core.level)
+	if Input.is_action_just_pressed(\"select\") and get_parent().placed:
+		if $Button.is_hovered() and player.get_assigned_animation() == \"HideRadius\":
+			
+			player.play(\"ShowRadius\")
+		else: if $Button.is_hovered() and player.get_assigned_animation() == \"ShowRadius\":
+			player.play(\"HideRadius\")
+		else: if player.get_assigned_animation() == \"ShowRadius\":
+			player.play(\"HideRadius\")
+		else: if player.get_assigned_animation() == \"ShowLevel\":
+			player.play(\"ShowRadius\")
+
+"
+
+[sub_resource type="GDScript" id="5"]
+resource_name = "DistanceSpriteScript"
+script/source = "extends Node2D
+
+
+@onready var core = get_node(\"../../../Core\")
+
+@onready var parent = get_parent();
+
+func _ready():
+	return
+
+func _process(delta):
+	pass
+
+"
+
+[sub_resource type="Animation" id="Animation_t146t"]
+resource_name = "HideRadius"
+length = 0.3
+step = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.291, 0.299),
+"transitions": PackedFloat32Array(2.63901, 2.54912, 185364),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0, 0), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.292),
+"transitions": PackedFloat32Array(1.56917, 1),
+"update": 0,
+"values": [Color(0, 0.741176, 1, 0.156863), Color(0, 0.741176, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Reload:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 0.659754),
+"update": 0,
+"values": [Vector2(-60, -170), Vector2(-60, -75)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../Reload:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 2.46229),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../Lvl:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 2.14355),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../Lvl:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.299),
+"transitions": PackedFloat32Array(1, 0.5),
+"update": 0,
+"values": [Vector2(-120, 80), Vector2(-120, 60)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = false
+tracks/6/path = NodePath("../..:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -15), Vector2(0, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = false
+tracks/7/path = NodePath(".:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 15), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_q7kn3"]
+resource_name = "ShowLevel"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Reload:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(0.277392, 1),
+"update": 0,
+"values": [Vector2(-60, -100), Vector2(-60, -210)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Reload:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(0.217638, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_e3he3"]
+resource_name = "ShowRadius"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.406126, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.63728, 1),
+"update": 0,
+"values": [Color(0.541176, 0.843137, 1, 0.0666667), Color(0, 0.741176, 1, 0.156863)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Reload:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.659754, 1),
+"update": 0,
+"values": [Vector2(-60, -100), Vector2(-60, -170)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../Reload:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(2.46229, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../Lvl:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(2.14355, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../Lvl:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(-120, 60), Vector2(-120, 80)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("../..:shake_offset")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(0.307786, 1.56917, 1),
+"update": 0,
+"values": [0.0, -10.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h3anw"]
+_data = {
+"HideRadius": SubResource("Animation_t146t"),
+"ShowLevel": SubResource("Animation_q7kn3"),
+"ShowRadius": SubResource("Animation_e3he3")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_quumq"]
+radius = 235.0
+
+[sub_resource type="GDScript" id="3"]
+resource_name = "TowerAreadScript"
+script/source = "extends Area2D
+
+@onready var TowerNode = get_node(\"../\")
+
+func _ready():
+	pass
+
+"
+
+[sub_resource type="RectangleShape2D" id="2"]
+size = Vector2(2, 2)
+
+[node name="Core" type="Node2D" groups=["core"]]
+script = SubResource("1")
+
+[node name="ShootCD" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Description" type="Node2D" parent="."]
+process_priority = -1
+script = SubResource("4")
+
+[node name="Button" type="Button" parent="Description"]
+self_modulate = Color(0, 0, 1, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.5
+offset_top = -79.0
+offset_right = 77.5
+offset_bottom = 79.0
+grow_horizontal = 2
+grow_vertical = 2
+toggle_mode = true
+text = "+"
+icon_alignment = 1
+
+[node name="Reload" type="Label" parent="Description"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -170.0
+offset_right = -32.0
+offset_bottom = -62.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("1_l0jgn")
+theme_override_font_sizes/font_size = 55
+text = "1
+
+"
+
+[node name="Lvl" type="Label" parent="Description"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -120.0
+offset_top = 80.0
+offset_right = 105.0
+offset_bottom = 134.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("1_l0jgn")
+theme_override_font_sizes/font_size = 55
+text = "Cost: 50"
+
+[node name="DistanceRange" type="Node2D" parent="Description"]
+script = SubResource("5")
+
+[node name="Sprite2D" type="Sprite2D" parent="Description/DistanceRange"]
+modulate = Color(0, 0.741176, 1, 0.156863)
+texture = ExtResource("1")
+metadata/_edit_lock_ = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Description/DistanceRange"]
+libraries = {
+"": SubResource("AnimationLibrary_h3anw")
+}
+
+[node name="Detecter" type="Area2D" parent="Description/DistanceRange"]
+visible = false
+collision_layer = 32
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Description/DistanceRange/Detecter"]
+shape = SubResource("CircleShape2D_quumq")
+
+[node name="CorePlacerArea" type="Area2D" parent="." groups=["tower_collider"]]
+z_index = 3
+script = SubResource("3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CorePlacerArea" groups=["tower_collider"]]
+visible = false
+scale = Vector2(40, 40)
+shape = SubResource("2")
+
+[connection signal="timeout" from="ShootCD" to="." method="_on_ShootCD_timeout"]
+[connection signal="area_entered" from="Description/DistanceRange/Detecter" to="." method="_on_detecter_area_entered"]
+[connection signal="area_exited" from="Description/DistanceRange/Detecter" to="." method="_on_detecter_area_exited"]
+[connection signal="mouse_entered" from="CorePlacerArea" to="." method="_on_Area2D_mouse_entered"]
+[connection signal="mouse_exited" from="CorePlacerArea" to="." method="_on_Area2D_mouse_exited"]

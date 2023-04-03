@@ -1,0 +1,98 @@
+[gd_scene load_steps=4 format=3 uid="uid://cv7cbagucsu3c"]
+
+[ext_resource type="Texture2D" uid="uid://dwayor225qdna" path="res://resources/win.png" id="1_dw32n"]
+[ext_resource type="Theme" uid="uid://crs1hao114fhj" path="res://resources/theme.tres" id="2_t4kdp"]
+
+[sub_resource type="GDScript" id="GDScript_jr773"]
+script/source = "extends Control
+@export_file(\"Level#*.tscn\") var next_level;
+@export_file(\"Level#*.tscn\") var current_level;
+
+func _process(delta):
+	get_tree().paused = true;
+
+func _on_exit_pressed():
+	var parent = get_parent();
+	get_tree().paused = false;
+	parent.queue_free();
+	get_tree().change_scene_to_file(\"res://scenes/MainMenu.tscn\")
+
+func _on_again_pressed():
+	var parent = get_parent();
+	get_tree().paused = false;
+	parent.queue_free();
+	get_tree().change_scene_to_file(current_level)
+	
+
+
+func _on_next_pressed():
+	var parent = get_parent();
+	get_tree().paused = false;
+	parent.queue_free();
+	get_tree().change_scene_to_file(next_level)
+"
+
+[node name="Control" type="Control"]
+process_mode = 3
+z_index = 9
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_jr773")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0, 0, 0, 0.188235)
+polygon = PackedVector2Array(-2357, -292, 6765, -273, 6808, 2418, -2380, 2421)
+metadata/_edit_lock_ = true
+
+[node name="SpriteHolder" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Win" type="Sprite2D" parent="SpriteHolder"]
+texture = ExtResource("1_dw32n")
+
+[node name="Exit" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1497.0
+offset_top = 1650.0
+offset_right = 1747.0
+offset_bottom = 1750.0
+theme = ExtResource("2_t4kdp")
+text = "Exit"
+
+[node name="Again" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1795.0
+offset_top = 1650.0
+offset_right = 2045.0
+offset_bottom = 1750.0
+theme = ExtResource("2_t4kdp")
+text = "Play Again
+"
+
+[node name="Next" type="Button" parent="."]
+layout_mode = 0
+offset_left = 2077.0
+offset_top = 1650.0
+offset_right = 2327.0
+offset_bottom = 1750.0
+theme = ExtResource("2_t4kdp")
+text = "Next Level"
+
+[connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="Again" to="." method="_on_again_pressed"]
+[connection signal="pressed" from="Next" to="." method="_on_next_pressed"]

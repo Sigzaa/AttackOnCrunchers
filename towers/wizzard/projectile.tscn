@@ -1,0 +1,455 @@
+[gd_scene load_steps=34 format=3 uid="uid://c54psi76ledw4"]
+
+[ext_resource type="Texture2D" uid="uid://cw1pdgttcqqi3" path="res://resources/tower2 attack/5.png" id="1_2pnyf"]
+[ext_resource type="Texture2D" uid="uid://dx3oa3j73iq8u" path="res://resources/tower2 attack/6.png" id="2_38802"]
+[ext_resource type="Texture2D" uid="uid://57tfylg7cvxd" path="res://resources/tower2 attack/7.png" id="3_mni18"]
+[ext_resource type="Texture2D" uid="uid://t5a8g5u4yp5w" path="res://resources/tower2 attack/8.png" id="4_k05n1"]
+[ext_resource type="Texture2D" uid="uid://bx3v6shocsy7b" path="res://resources/tower2 attack/9.png" id="5_vyf2i"]
+[ext_resource type="Texture2D" uid="uid://fx4gbttiickt" path="res://resources/tower2 attack/10.png" id="6_ojl03"]
+[ext_resource type="Texture2D" uid="uid://b4nqw4ek5raa8" path="res://resources/tower2 attack/11.png" id="7_2705x"]
+[ext_resource type="Texture2D" uid="uid://duh1f7n7r1iv2" path="res://resources/tower2 attack/12.png" id="8_crjr8"]
+[ext_resource type="Texture2D" uid="uid://fl8lk1a3402h" path="res://resources/tower2 attack/13.png" id="9_llsts"]
+[ext_resource type="Texture2D" uid="uid://jw02fjt63j2l" path="res://resources/tower2 attack/14.png" id="10_ffssq"]
+[ext_resource type="Texture2D" uid="uid://ce52nctltcvbv" path="res://resources/tower2 attack/15.png" id="11_v8ih0"]
+[ext_resource type="Texture2D" uid="uid://no046guhftq1" path="res://resources/tower2 attack/2.1.png" id="12_2hlc8"]
+[ext_resource type="Texture2D" uid="uid://tadj1tx1e1jy" path="res://resources/tower2 attack/3.1.png" id="13_2x6ce"]
+[ext_resource type="Texture2D" uid="uid://rc45bt5vas36" path="res://resources/tower2 attack/4.1.png" id="14_68t61"]
+[ext_resource type="Texture2D" uid="uid://cnt2iq8q0wceb" path="res://resources/tower2 attack/2.png" id="15_e57hn"]
+[ext_resource type="Texture2D" uid="uid://bd8pq6qdydpu7" path="res://resources/tower2 attack/2.2.png" id="16_s3xdx"]
+[ext_resource type="Texture2D" uid="uid://b86pyfyee7qc6" path="res://resources/tower2 attack/3.2.png" id="17_7s7ln"]
+[ext_resource type="Texture2D" uid="uid://b6vevcdpc3j5e" path="res://resources/tower2 attack/4.2.png" id="18_8cccp"]
+
+[sub_resource type="GDScript" id="GDScript_mh3kx"]
+script/source = "extends Node2D
+
+@onready var enemy;
+
+var move = true;
+var slow_down = 0.5;
+var dmg = 10;
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	#$AnimSprite.play(\"fly\");
+	$AnimPlayer.play(\"fly\");
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if move and enemy != null:
+		global_position += global_position.direction_to(enemy.global_position) * 300 * delta;
+		global_position += Vector2(0., -100) * delta;
+		look_at(enemy.global_position + Vector2(0., -50));
+	else: if enemy == null:
+		$AnimPlayer.play(\"boom\");
+		move = false;
+
+func _on_wizzy_projectile_hit_box_area_entered(area):
+	$AnimPlayer.play(\"boom\");
+	move = false;
+
+
+func _on_boom_zone_area_entered(area):
+
+	var cruncher = area.get_parent();
+	var sprite = cruncher.get_node(\"Sprite\");
+	if cruncher.is_in_group(\"cruncher\"):
+		cruncher.take_dmg(dmg);
+		cruncher.speed_coef = 0.5;
+		
+		sprite.modulate = Color(0.2, 0.5, 1);
+		await get_tree().create_timer(slow_down).timeout
+		if cruncher != null:
+			sprite.modulate = Color(1, 1, 1, 1);
+			cruncher.speed_coef = 1.0;
+	
+
+"
+
+[sub_resource type="Animation" id="Animation_i6jq3"]
+resource_name = "boom"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Projectile:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Boom")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"boom", 1.0, false],
+"method": &"play"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Boom:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.7),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("BoomZone:monitoring")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BoomZone:monitorable")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_65yeu"]
+resource_name = "fly"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Projectile/Core:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.6, 1),
+"transitions": PackedFloat32Array(2.54912, 0.233258, 4.59479, 1),
+"update": 0,
+"values": [0.0, 6.28319, -1.50273, 10.2049]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Projectile/Core:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 0.5),
+"transitions": PackedFloat32Array(0.406126, 3.4822),
+"update": 0,
+"values": [Vector2(0.707, 0.707), Vector2(0.949, 0.949)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Projectile/Background")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"fly", 1.0, false],
+"method": &"play"
+}]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Projectile/Blick")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"fly", 1.0, false],
+"method": &"play"
+}]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Projectile:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q2rhg"]
+_data = {
+"boom": SubResource("Animation_i6jq3"),
+"fly": SubResource("Animation_65yeu")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0fcga"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_2pnyf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_38802")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_mni18")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_k05n1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_k05n1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_vyf2i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_vyf2i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ojl03")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_2705x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_crjr8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_llsts")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_ffssq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_v8ih0")
+}],
+"loop": true,
+"name": &"boom",
+"speed": 15.0
+}]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_60fxe"]
+blend_mode = 1
+light_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_o7blg"]
+offsets = PackedFloat32Array(0.0107991, 0.24622, 0.358531, 0.49892, 0.669546, 0.768898, 0.909287, 1)
+colors = PackedColorArray(0.405181, 0.592297, 1, 1, 0.144722, 0.379528, 0.999985, 1, 0, 1, 1, 1, 0, 0.960784, 0.341176, 1, 0.144722, 0.379528, 0.999985, 1, 0.430589, 0.13711, 0.778337, 1, 0.591641, 0.000537043, 0.653465, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_iiqsn"]
+gradient = SubResource("Gradient_o7blg")
+
+[sub_resource type="Curve" id="Curve_n3kpa"]
+max_value = 3.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.0918972, 2.55372), 28.0, 28.0, 0, 0, Vector2(0.995059, 2.4876), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_qc1at"]
+curve = SubResource("Curve_n3kpa")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_04glj"]
+particle_flag_disable_z = true
+spread = 15.0
+gravity = Vector3(0, 98, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 100.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+damping_min = 50.0
+damping_max = 50.0
+scale_curve = SubResource("CurveTexture_qc1at")
+color_ramp = SubResource("GradientTexture1D_iiqsn")
+turbulence_enabled = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oruhk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_2pnyf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_38802")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_mni18")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_mni18")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_k05n1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_k05n1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_vyf2i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ojl03")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_crjr8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_2705x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_llsts")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_ffssq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_v8ih0")
+}],
+"loop": true,
+"name": &"boom",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_2hlc8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_2x6ce")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_68t61")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mjj76"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_s3xdx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_7s7ln")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_8cccp")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 7.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_upqvt"]
+radius = 22.0227
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_luqsp"]
+radius = 126.016
+
+[node name="ProjectileWizzard" type="Node2D"]
+position = Vector2(147, 48)
+script = SubResource("GDScript_mh3kx")
+
+[node name="AnimPlayer" type="AnimationPlayer" parent="."]
+process_mode = 1
+libraries = {
+"": SubResource("AnimationLibrary_q2rhg")
+}
+
+[node name="Boom" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_0fcga")
+animation = &"boom"
+metadata/_edit_lock_ = true
+
+[node name="Projectile" type="Node2D" parent="."]
+visible = false
+metadata/_edit_lock_ = true
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Projectile"]
+material = SubResource("CanvasItemMaterial_60fxe")
+rotation = -2.98715
+amount = 16
+process_material = SubResource("ParticleProcessMaterial_04glj")
+lifetime = 1.5
+metadata/_edit_lock_ = true
+
+[node name="Background" type="AnimatedSprite2D" parent="Projectile"]
+sprite_frames = SubResource("SpriteFrames_oruhk")
+animation = &"fly"
+frame_progress = 0.219547
+offset = Vector2(3.572, -2)
+metadata/_edit_lock_ = true
+
+[node name="Core" type="Sprite2D" parent="Projectile"]
+scale = Vector2(0.82074, 0.82074)
+texture = ExtResource("15_e57hn")
+offset = Vector2(5, -2)
+metadata/_edit_lock_ = true
+
+[node name="Blick" type="AnimatedSprite2D" parent="Projectile"]
+position = Vector2(4.893, -3.01)
+sprite_frames = SubResource("SpriteFrames_mjj76")
+animation = &"fly"
+frame_progress = 0.00757814
+metadata/_edit_lock_ = true
+
+[node name="WizzyProjectileHitBox" type="Area2D" parent="."]
+collision_layer = 512
+collision_mask = 512
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WizzyProjectileHitBox"]
+shape = SubResource("CircleShape2D_upqvt")
+debug_color = Color(0, 0.584314, 0.768627, 0.419608)
+
+[node name="BoomZone" type="Area2D" parent="."]
+visible = false
+collision_layer = 1024
+collision_mask = 524288
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BoomZone"]
+shape = SubResource("CircleShape2D_luqsp")
+debug_color = Color(0.976471, 0, 0.415686, 0.419608)
+
+[connection signal="area_entered" from="WizzyProjectileHitBox" to="." method="_on_wizzy_projectile_hit_box_area_entered"]
+[connection signal="area_entered" from="BoomZone" to="." method="_on_boom_zone_area_entered"]

@@ -1,0 +1,54 @@
+[gd_scene load_steps=5 format=3 uid="uid://byghcng5iswck"]
+
+[ext_resource type="Texture2D" uid="uid://db4ctbbk3sskf" path="res://resources/map1.png" id="1_65hml"]
+[ext_resource type="PackedScene" uid="uid://cegpftk7mtotk" path="res://scenes/Maps/TowerZone.tscn" id="2_hywy5"]
+[ext_resource type="PackedScene" uid="uid://dpcfudaj8kilw" path="res://scenes/Maps/dead_zone.tscn" id="3_xmbd7"]
+
+[sub_resource type="Curve2D" id="1"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -2, 854, 0, 0, 0, 0, 471, 862, 0, 0, 0, 0, 778, 981, 0, 0, 0, 0, 958, 1091, 0, 0, 0, 0, 1347, 1178, 0, 0, 0, 0, 1889, 970, 0, 0, 0, 0, 2186, 860, 0, 0, 0, 0, 2575, 825, 0, 0, 0, 0, 2878, 981, 0, 0, 0, 0, 3063, 1177, 0, 0, 0, 0, 3344, 1237, 0, 0, 0, 0, 3573, 1268, 0, 0, 0, 0, 3938, 1216)
+}
+point_count = 13
+
+[node name="Map#1" type="Node"]
+
+[node name="Map1" type="Sprite2D" parent="."]
+position = Vector2(1783, 1089)
+texture = ExtResource("1_65hml")
+metadata/_edit_lock_ = true
+
+[node name="TowerZone" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(3648, 1538)
+
+[node name="TowerZone2" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(1731, 754)
+
+[node name="TowerZone3" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(2701, 1309)
+
+[node name="TowerZone4" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(464, 609)
+
+[node name="TowerZone5" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(2881, 592)
+
+[node name="TowerZone6" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(1219, 868)
+
+[node name="TowerZone7" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(1941, 1302)
+
+[node name="TowerZone8" parent="." instance=ExtResource("2_hywy5")]
+position = Vector2(394, 1163)
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource("1")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D" groups=["enemy_path"]]
+position = Vector2(-2, 854)
+rotation = 0.0169117
+cubic_interp = false
+loop = false
+
+[node name="DeadZone" parent="." instance=ExtResource("3_xmbd7")]
+position = Vector2(3942, 1211)

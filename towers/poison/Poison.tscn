@@ -1,0 +1,410 @@
+[gd_scene load_steps=40 format=3 uid="uid://dowj8qudj7iig"]
+
+[ext_resource type="Texture2D" uid="uid://dn4h18isg0b1g" path="res://towers/poison/sprite.png" id="1_03kh3"]
+[ext_resource type="PackedScene" uid="uid://bb5t63hsxvciu" path="res://scenes/Core.tscn" id="2_rxqpv"]
+[ext_resource type="Texture2D" uid="uid://cnt2iq8q0wceb" path="res://resources/tower2 attack/2.png" id="3_wi66a"]
+[ext_resource type="Texture2D" uid="uid://bd8pq6qdydpu7" path="res://resources/tower2 attack/2.2.png" id="4_3s3jf"]
+[ext_resource type="Texture2D" uid="uid://b86pyfyee7qc6" path="res://resources/tower2 attack/3.2.png" id="5_5caae"]
+[ext_resource type="Texture2D" uid="uid://b6vevcdpc3j5e" path="res://resources/tower2 attack/4.2.png" id="6_p61a1"]
+
+[sub_resource type="GDScript" id="GDScript_4it7f"]
+script/source = "extends Node2D
+
+@onready var sprite = $PoisonGhost;
+@onready var core = $Core;
+var Projectile = preload(\"res://towers/poison/poison_projectile.tscn\")
+
+var dmg_coeff = 4;
+var dmg = 4;
+var poison_coeff = 1.2;
+var poison_dmg = 2;
+var poison_duration = 2;
+
+func _ready():
+	$AnimationPlayer.play_backwards(\"Charge\");
+	
+func wiki() -> Array:
+	var dmg_base = Projectile.instantiate().dmg;
+	return [
+		$Core.get_cd(),
+		$Core.get_distance(),
+		[\"Dmg: \", dmg_base + dmg_coeff * 1, dmg_base + dmg_coeff * 2, dmg_base + dmg_coeff * 3, dmg_base + dmg_coeff * 4],
+		
+	]
+
+func _process(delta):
+	if core.cd.time_left <= 0.5 and core.cd.time_left > 0:
+		$AnimationPlayer.play(\"AppearOrb\")
+		await $AnimationPlayer.animation_finished;
+		await get_tree().create_timer(0.2 * core.level * 1.5).timeout
+		$AnimationPlayer.play_backwards(\"AppearOrb\")
+	
+	if core.placed:
+		#sprite.float_sin(delta);
+		#$Anime/AnimationPlayer.play(\"Idle\");
+		pass
+	
+
+func _instance(instance):
+	add_sibling(instance, false)
+
+func fire(enemy):
+	for i in range(core.level * 1.5):
+		inst(enemy)
+		await get_tree().create_timer(0.2).timeout
+	#sprite.fire_shake(linear_velocity);
+func inst(enemy):
+	if enemy == null:
+		enemy = core.get_enemy();
+		if enemy == null:
+			return
+	var proj_inst = Projectile.instantiate()
+	proj_inst.position = get_position() + Vector2(0., -200.0);
+
+	
+	proj_inst.target = enemy.position;
+	proj_inst.dmg = dmg + dmg_coeff * core.level;
+	proj_inst.poison_dmg = poison_dmg;
+	proj_inst.poison_duration = 3 + core.level;
+	
+	_instance(proj_inst)
+
+func _on_core_enemy_entered():
+	$AnimationPlayer.play(\"Charge\");
+
+
+func _on_core_last_enemy_exited():
+	$AnimationPlayer.play_backwards(\"Charge\");
+"
+
+[sub_resource type="Gradient" id="Gradient_ysivt"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fiwr1"]
+gradient = SubResource("Gradient_ysivt")
+
+[sub_resource type="Curve" id="Curve_vy7ab"]
+max_value = 183.11
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.842537, 109.462), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_r34a5"]
+curve = SubResource("Curve_vy7ab")
+
+[sub_resource type="Curve" id="Curve_brbjt"]
+max_value = 2.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.564925, 1.3719), 0.0, 0.0, 0, 0, Vector2(1, 0), -21.1186, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_ebvw1"]
+curve = SubResource("Curve_brbjt")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pfm86"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 30.0
+emission_ring_inner_radius = 10.0
+particle_flag_disable_z = true
+gravity = Vector3(0, -100, 0)
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("CurveTexture_r34a5")
+scale_min = 2.0
+scale_max = 6.0
+scale_curve = SubResource("CurveTexture_ebvw1")
+color = Color(0.705882, 1, 0.466667, 1)
+color_ramp = SubResource("GradientTexture1D_fiwr1")
+hue_variation_min = -0.34
+hue_variation_max = 0.07
+
+[sub_resource type="Gradient" id="Gradient_eh6mp"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_0b1yb"]
+gradient = SubResource("Gradient_eh6mp")
+
+[sub_resource type="Curve" id="Curve_giwdx"]
+max_value = 183.11
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.842537, 109.462), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_hwker"]
+curve = SubResource("Curve_giwdx")
+
+[sub_resource type="Curve" id="Curve_fil3r"]
+max_value = 2.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.564925, 1.3719), 0.0, 0.0, 0, 0, Vector2(1, 0), -21.1186, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_mxocb"]
+curve = SubResource("Curve_fil3r")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bqdbd"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 30.0
+emission_ring_inner_radius = 10.0
+particle_flag_disable_z = true
+gravity = Vector3(0, -100, 0)
+orbit_velocity_min = -2.0
+orbit_velocity_max = 2.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("CurveTexture_hwker")
+scale_min = 2.0
+scale_max = 6.0
+scale_curve = SubResource("CurveTexture_mxocb")
+color = Color(0.705882, 1, 0.466667, 1)
+color_ramp = SubResource("GradientTexture1D_0b1yb")
+hue_variation_min = -0.34
+hue_variation_max = 0.07
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_yhxqe"]
+animation = &"AppearOrb"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3k0og"]
+animation = &"Charge"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_j7pw3"]
+animation = &"AppearOrb"
+play_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_byv8j"]
+animation = &"ChargeOrb"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wpxyo"]
+animation = &"Charge"
+play_mode = 1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3t6g3"]
+switch_mode = 1
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w6ch3"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1xntx"]
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_xda5o"]
+states/Appear/node = SubResource("AnimationNodeAnimation_yhxqe")
+states/Appear/position = Vector2(500, 216.694)
+states/Charge/node = SubResource("AnimationNodeAnimation_3k0og")
+states/Charge/position = Vector2(296.898, 216.659)
+states/Dissapear/node = SubResource("AnimationNodeAnimation_j7pw3")
+states/Dissapear/position = Vector2(942.857, 253.429)
+states/RotateOrb/node = SubResource("AnimationNodeAnimation_byv8j")
+states/RotateOrb/position = Vector2(755.429, 264.857)
+states/Start/position = Vector2(128.571, 99.7551)
+states/Uncharge/node = SubResource("AnimationNodeAnimation_wpxyo")
+states/Uncharge/position = Vector2(261.143, 98.0117)
+transitions = ["Charge", "Appear", SubResource("AnimationNodeStateMachineTransition_3t6g3"), "Uncharge", "Charge", SubResource("AnimationNodeStateMachineTransition_w6ch3"), "Charge", "Uncharge", SubResource("AnimationNodeStateMachineTransition_1xntx")]
+graph_offset = Vector2(-87, -9)
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_67e1q"]
+
+[sub_resource type="Animation" id="Animation_k6auw"]
+resource_name = "AppearOrb"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Orb:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.5),
+"transitions": PackedFloat32Array(0.594603, 0.659754, 1),
+"update": 0,
+"values": [Vector2(0, -120), Vector2(0, -210), Vector2(0, -200)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Orb:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0.3, 1), Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Orb/Sprite:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -17.4533]
+}
+
+[sub_resource type="Animation" id="Animation_j1lab"]
+resource_name = "Charge"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Idle:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.277393, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Charge:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.25, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_icbvl"]
+resource_name = "ChargeOrb"
+length = 0.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Orb/Sprite:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -3.49066]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Orb:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Orb:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -200)]
+}
+
+[sub_resource type="Animation" id="Animation_qup0y"]
+resource_name = "DissappearOrb"
+
+[sub_resource type="Animation" id="Animation_ubx88"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_a64ol"]
+resource_name = "ToIdle"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_axhc8"]
+_data = {
+"AppearOrb": SubResource("Animation_k6auw"),
+"Charge": SubResource("Animation_j1lab"),
+"ChargeOrb": SubResource("Animation_icbvl"),
+"DissappearOrb": SubResource("Animation_qup0y"),
+"RESET": SubResource("Animation_ubx88"),
+"ToIdle": SubResource("Animation_a64ol")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_d4h50"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_3s3jf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_5caae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_p61a1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Poison" type="Node2D" groups=["ghost"]]
+script = SubResource("GDScript_4it7f")
+
+[node name="Core" parent="." node_paths=PackedStringArray("tower_sprite") groups=["tower"] instance=ExtResource("2_rxqpv")]
+outer_scale = 2
+lvl_cd = 0.0
+tower_sprite = NodePath("../PoisonGhost")
+
+[node name="ShootCD" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="PoisonGhost" type="Sprite2D" parent="."]
+position = Vector2(0, -53)
+texture = ExtResource("1_03kh3")
+metadata/_edit_lock_ = true
+
+[node name="Idle" type="GPUParticles2D" parent="."]
+position = Vector2(0, -115)
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_pfm86")
+lifetime = 1.5
+
+[node name="Charge" type="GPUParticles2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0, -115)
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_bqdbd")
+lifetime = 1.5
+
+[node name="Anim" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_xda5o")
+anim_player = NodePath("../AnimationPlayer")
+parameters/playback = SubResource("AnimationNodeStateMachinePlayback_67e1q")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_axhc8")
+}
+
+[node name="Orb" type="Node2D" parent="."]
+position = Vector2(0, -120)
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Sprite" type="Sprite2D" parent="Orb"]
+self_modulate = Color(0.913725, 0.917647, 0, 1)
+texture = ExtResource("3_wi66a")
+offset = Vector2(5, -2)
+metadata/_edit_lock_ = true
+
+[node name="Blick" type="AnimatedSprite2D" parent="Orb"]
+sprite_frames = SubResource("SpriteFrames_d4h50")
+frame_progress = 0.7926
+offset = Vector2(-4.951, -1.182)
+flip_h = true
+metadata/_edit_lock_ = true
+
+[connection signal="enemy_entered" from="Core" to="." method="_on_core_enemy_entered"]
+[connection signal="last_enemy_exited" from="Core" to="." method="_on_core_last_enemy_exited"]

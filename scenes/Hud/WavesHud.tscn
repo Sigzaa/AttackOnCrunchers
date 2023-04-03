@@ -1,0 +1,356 @@
+[gd_scene load_steps=12 format=3 uid="uid://dm4jka5mpu7m4"]
+
+[ext_resource type="FontFile" uid="uid://bjp5w0apflpln" path="res://resources/upheavtt.ttf" id="1_74mre"]
+[ext_resource type="Texture2D" uid="uid://cw5s87ppglx7p" path="res://resources/pause.png" id="2_1yfbi"]
+[ext_resource type="Texture2D" uid="uid://cs0oi5q1580cv" path="res://resources/upgrade.png" id="2_sjtly"]
+[ext_resource type="Texture2D" uid="uid://csd25au1hk1e7" path="res://resources/pause-button.png" id="3_ayji0"]
+[ext_resource type="Theme" uid="uid://crs1hao114fhj" path="res://resources/theme.tres" id="5_7ptrl"]
+
+[sub_resource type="GDScript" id="2"]
+resource_name = "AttackHudScript"
+script/source = "extends Control
+
+@onready var globals = get_node(\"/root/Globals\")
+@onready var break_timer = get_node(\"../../../EnemySpawner/BreakTimer\")
+@onready var enemy_spawner = get_node(\"../../../EnemySpawner\")
+@onready var remainings = get_node(\"../Remainings\")
+
+func _ready():
+	pass
+
+func _process(delta):
+	if break_timer.time_left <= 0.0:
+		visible = true
+		for index in $SpeedCtrl.get_selected_items():
+			$SpeedCtrl.change_speed(index)
+				
+	else:
+		visible = false
+	
+	enemies_left();
+	update_wave_counter();
+	
+func update_wave_counter():
+	get_node(\"../WaveCounter\").text = \"Wave: \" + str(enemy_spawner.wave) + \"/\" + str(enemy_spawner.max_waves_count);
+
+func enemies_left():
+	var enemies_left = get_tree().get_nodes_in_group(\"cruncher\").size();
+	
+	remainings.text = \"Enemies left:\" + str(enemies_left)
+
+
+func _on_Pause_pressed():
+	get_tree().paused = not get_tree().paused
+"
+
+[sub_resource type="GDScript" id="3"]
+script/source = "extends ItemList
+
+func _ready():
+	select(1, true)
+	
+func change_speed(index):
+	_on_SpeedCtrl_item_selected(index)
+	
+func _on_SpeedCtrl_item_selected(index):
+	if index == 0:
+		Engine.set_time_scale(0.5)
+	if index == 1:
+		Engine.set_time_scale(1)
+	if index == 2:
+		Engine.set_time_scale(2.5)
+"
+
+[sub_resource type="GDScript" id="1"]
+resource_name = "BreakHudScript"
+script/source = "extends Control
+
+@onready var break_timer = get_node(\"../../../EnemySpawner/BreakTimer\")
+@onready var remainings = get_node(\"../Remainings\")
+
+func _ready():
+	pass
+
+func _process(delta):
+	remainings.text = \"Break timeeee left: \" + str(int(break_timer.time_left))
+	if break_timer.time_left <= 0.0:
+		visible = false
+	else:
+		visible = true
+
+func _on_SkipStage_pressed():
+	break_timer.start(0.01);
+"
+
+[sub_resource type="GDScript" id="GDScript_xm3bb"]
+script/source = "extends Control
+
+@onready var button = get_node(\"../PauseButton\");
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	modulate.a = 0.0;
+
+func _input(event):
+	if event is InputEventMouseButton:
+		button.set_pressed(false);
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		if button.button_pressed:
+			button.set_pressed(false);
+		else: if !button.button_pressed:
+			button.set_pressed(true);
+
+
+func _on_button_toggled(button_pressed):
+	if !button_pressed:
+		$PauseAnim.play_backwards(\"show\")
+		get_tree().paused = false
+	else:
+		$PauseAnim.play(\"show\")
+		get_tree().paused = true
+	
+
+
+func _on_leave_pressed():
+	
+	var parent = get_parent().get_parent();
+	parent.queue_free();
+	get_tree().change_scene_to_file(\"res://scenes/MainMenu.tscn\")
+	button.set_pressed(false);
+
+
+func _on_continue_pressed():
+	#_on_button_toggled(false);
+	button.set_pressed(false);
+	
+	
+
+
+func _on_restart_pressed():
+	var level = get_node(\"../../EnemySpawner\").current_level;
+	var parent = get_parent().get_parent();
+	get_tree().paused = false;
+	parent.queue_free();
+	get_tree().change_scene_to_file(level)
+"
+
+[sub_resource type="Animation" id="Animation_105xw"]
+resource_name = "show"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.482968, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:offset")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.241484, 1),
+"update": 0,
+"values": [Vector2(0, -60), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_isdcs"]
+_data = {
+"show": SubResource("Animation_105xw")
+}
+
+[node name="WavesHud" type="Control"]
+layout_mode = 3
+anchor_right = 1.01
+anchor_bottom = 0.137
+offset_right = 0.600098
+offset_bottom = 0.0799866
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 51.0
+offset_right = 300.0
+offset_bottom = 251.0
+grow_horizontal = 2
+
+[node name="WaveCounter" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -136.5
+offset_top = -58.5
+offset_right = 136.5
+offset_bottom = -1.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_74mre")
+theme_override_font_sizes/font_size = 60
+text = "Wave: 1/5"
+
+[node name="Remainings" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -58.5
+offset_top = 22.0
+offset_right = 58.5
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Enemies Left: 5
+"
+
+[node name="DuringAttack" type="Control" parent="Panel"]
+anchors_preset = 0
+script = SubResource("2")
+
+[node name="Pause" type="Button" parent="Panel/DuringAttack"]
+layout_mode = 0
+anchor_right = 0.22
+anchor_bottom = 0.017
+offset_left = 13.0
+offset_top = 22.0
+offset_right = 63.0
+offset_bottom = 45.8
+toggle_mode = true
+text = "Pause"
+
+[node name="SpeedCtrl" type="ItemList" parent="Panel/DuringAttack"]
+layout_mode = 0
+offset_left = 1666.5
+offset_top = 8.0
+offset_right = 2002.5
+offset_bottom = 121.0
+allow_rmb_select = true
+item_count = 3
+max_columns = 3
+same_column_width = true
+icon_mode = 0
+icon_scale = 0.5
+item_0/text = ""
+item_0/icon = ExtResource("2_sjtly")
+item_1/text = ""
+item_1/icon = ExtResource("2_sjtly")
+item_2/text = ""
+item_2/icon = ExtResource("2_sjtly")
+script = SubResource("3")
+
+[node name="DuringBreak" type="Control" parent="Panel"]
+visible = false
+anchors_preset = 0
+script = SubResource("1")
+
+[node name="SkipStage" type="Button" parent="Panel/DuringBreak"]
+layout_mode = 0
+offset_left = 1694.0
+offset_top = 10.0
+offset_right = 1995.0
+offset_bottom = 115.0
+text = "Skip Preparing Stage"
+
+[node name="PauseButton" type="Button" parent="."]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -207.0
+offset_top = 60.0
+offset_right = 1.0
+offset_bottom = 268.0
+grow_horizontal = 0
+scale = Vector2(0.5, 0.5)
+toggle_mode = true
+icon = ExtResource("3_ayji0")
+
+[node name="Pause" type="Control" parent="."]
+process_mode = 3
+z_index = 10
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = SubResource("GDScript_xm3bb")
+
+[node name="PauseAnim" type="AnimationPlayer" parent="Pause"]
+libraries = {
+"": SubResource("AnimationLibrary_isdcs")
+}
+
+[node name="Background" type="Polygon2D" parent="Pause"]
+modulate = Color(0, 0, 0, 0.545098)
+polygon = PackedVector2Array(-1375, -388, 6105, -322, 6136, 3180, -1360, 3157)
+metadata/_edit_lock_ = true
+
+[node name="Sprite" type="Sprite2D" parent="Pause"]
+position = Vector2(1897, 900)
+scale = Vector2(2.8675, 2.8675)
+texture = ExtResource("2_1yfbi")
+metadata/_edit_lock_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Pause"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 1606.0
+offset_top = 1293.0
+offset_right = 2180.0
+offset_bottom = 1415.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 59
+
+[node name="Leave" type="Button" parent="Pause/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("5_7ptrl")
+text = "Leave"
+metadata/_edit_lock_ = true
+
+[node name="Restart" type="Button" parent="Pause/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("5_7ptrl")
+text = "Restart"
+metadata/_edit_lock_ = true
+
+[node name="Continue" type="Button" parent="Pause/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("5_7ptrl")
+text = "Continue"
+metadata/_edit_lock_ = true
+
+[connection signal="pressed" from="Panel/DuringAttack/Pause" to="Panel/DuringAttack" method="_on_Pause_pressed"]
+[connection signal="item_activated" from="Panel/DuringAttack/SpeedCtrl" to="Panel/DuringAttack/SpeedCtrl" method="_on_SpeedCtrl_item_activated"]
+[connection signal="item_selected" from="Panel/DuringAttack/SpeedCtrl" to="Panel/DuringAttack/SpeedCtrl" method="_on_SpeedCtrl_item_selected"]
+[connection signal="pressed" from="Panel/DuringBreak/SkipStage" to="Panel/DuringBreak" method="_on_SkipStage_pressed"]
+[connection signal="toggled" from="PauseButton" to="Pause" method="_on_button_toggled"]
+[connection signal="pressed" from="Pause/HBoxContainer/Leave" to="Pause" method="_on_leave_pressed"]
+[connection signal="pressed" from="Pause/HBoxContainer/Restart" to="Pause" method="_on_restart_pressed"]
+[connection signal="pressed" from="Pause/HBoxContainer/Continue" to="Pause" method="_on_continue_pressed"]

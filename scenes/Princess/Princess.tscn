@@ -1,0 +1,558 @@
+[gd_scene load_steps=59 format=3 uid="uid://b8l84wrjtylyv"]
+
+[ext_resource type="Texture2D" uid="uid://c0u4e253yvsfq" path="res://resources/tower_hp.png" id="1_0oe7m"]
+[ext_resource type="Texture2D" uid="uid://c2gin0e183l1j" path="res://scenes/Princess/Forest/замок.png" id="2_hogib"]
+[ext_resource type="Texture2D" uid="uid://doq8jeyhp67od" path="res://scenes/Princess/Forest/принцесса1.png" id="2_j0gcd"]
+[ext_resource type="Texture2D" uid="uid://cfcdlflh05qs1" path="res://scenes/Princess/Forest/принцесса2.png" id="3_64dyc"]
+[ext_resource type="Texture2D" uid="uid://bp0g2bb82v001" path="res://scenes/Princess/Forest/принцесса3.png" id="4_w3ggk"]
+[ext_resource type="Texture2D" uid="uid://bnlpi656b8mfq" path="res://scenes/Princess/Forest/принцесса4.1.png" id="5_tvlr7"]
+[ext_resource type="Texture2D" uid="uid://bohxr8o6ckwuc" path="res://scenes/Princess/Forest/принцесса4.png" id="6_qdx5e"]
+[ext_resource type="Texture2D" uid="uid://bu7f7lul0l04m" path="res://scenes/Princess/Forest/принцесса5.1.png" id="7_unegg"]
+[ext_resource type="Texture2D" uid="uid://ctl5ya4imoo8y" path="res://scenes/Princess/Forest/принцесса5.png" id="8_055tq"]
+[ext_resource type="Texture2D" uid="uid://d08ip4nae0tv8" path="res://scenes/Princess/Forest/принцесса6.png" id="9_gglkh"]
+[ext_resource type="Texture2D" uid="uid://cs7jdhioj0tu1" path="res://scenes/Princess/Swamp/принцесса2.png" id="11_uipqm"]
+[ext_resource type="Texture2D" uid="uid://t0v87lpfjmjo" path="res://scenes/Princess/Swamp/прин 1.png" id="12_10kuy"]
+[ext_resource type="Texture2D" uid="uid://dupyfyrw4opn1" path="res://scenes/Princess/Swamp/прин 2.png" id="13_hls0o"]
+[ext_resource type="Texture2D" uid="uid://bchctkgad7hw2" path="res://scenes/Princess/Swamp/прин 3.png" id="14_rydnx"]
+[ext_resource type="Texture2D" uid="uid://cj7uxaaxuyur6" path="res://scenes/Princess/Swamp/прин 4.png" id="15_tn353"]
+[ext_resource type="Texture2D" uid="uid://cxwl2rti0elxp" path="res://scenes/Princess/Swamp/прин 5.png" id="16_foyed"]
+[ext_resource type="Texture2D" uid="uid://c1ac3h2auj6xg" path="res://scenes/Princess/Swamp/прин 6.png" id="17_w2a4j"]
+[ext_resource type="Texture2D" uid="uid://dirrsmd2uwsk8" path="res://scenes/Princess/Swamp/прин 7.png" id="18_nhkue"]
+[ext_resource type="Texture2D" uid="uid://dfl10pr0v23v4" path="res://scenes/Princess/Swamp/прин 8.png" id="19_yh2b7"]
+[ext_resource type="Texture2D" uid="uid://bhew73fabc3xb" path="res://scenes/Princess/Swamp/прин 9.png" id="20_u4772"]
+[ext_resource type="Texture2D" uid="uid://jhd0ik70rnvc" path="res://scenes/Princess/Swamp/прин 10.png" id="21_6d3b4"]
+[ext_resource type="Texture2D" uid="uid://c0ir7r4opnkrv" path="res://scenes/Princess/Swamp/прин 11.png" id="22_gyxiw"]
+[ext_resource type="Texture2D" uid="uid://3amdaik7pwo1" path="res://scenes/Princess/Berry/прин 1.png" id="23_bpiop"]
+[ext_resource type="Texture2D" uid="uid://ba3arrxxytkxn" path="res://scenes/Princess/Berry/прин 2.png" id="24_svqrs"]
+[ext_resource type="Texture2D" uid="uid://di1os11x80pyy" path="res://scenes/Princess/Berry/прин 3.png" id="25_1cj6y"]
+[ext_resource type="Texture2D" uid="uid://bxasi1j5v6k2" path="res://scenes/Princess/Berry/прин 4.png" id="26_r66ka"]
+[ext_resource type="Texture2D" uid="uid://qgi3byqr8tv8" path="res://scenes/Princess/Berry/прин 5.png" id="27_urwy8"]
+[ext_resource type="Texture2D" uid="uid://cxde04qp73ocg" path="res://scenes/Princess/Berry/прин 6.png" id="28_6vv3i"]
+[ext_resource type="Texture2D" uid="uid://dna6nwkm0582d" path="res://scenes/Princess/Berry/прин 7.png" id="29_tk4pm"]
+[ext_resource type="Texture2D" uid="uid://b0tjhxdca63ul" path="res://scenes/Princess/Berry/прин 8.png" id="30_qhjog"]
+[ext_resource type="Texture2D" uid="uid://bqicp737huo7d" path="res://scenes/Princess/Berry/прин 9.1.png" id="31_mha0u"]
+[ext_resource type="Texture2D" uid="uid://87j2ju80w60o" path="res://scenes/Princess/Berry/прин 9.png" id="32_j6hs8"]
+[ext_resource type="Texture2D" uid="uid://c8jip36ge8qfy" path="res://scenes/Princess/Berry/прин 10.1.png" id="33_fcu6j"]
+[ext_resource type="Texture2D" uid="uid://dyh7uvau2xudo" path="res://scenes/Princess/Berry/прин 10.png" id="34_pb3l4"]
+[ext_resource type="Texture2D" uid="uid://bi41c3pe1rhld" path="res://scenes/Princess/Berry/прин 11.png" id="35_22404"]
+[ext_resource type="Texture2D" uid="uid://buay2152f8pxu" path="res://scenes/Princess/City/принцесса.png" id="36_um1fe"]
+[ext_resource type="Texture2D" uid="uid://bx8nluk5nxhbu" path="res://scenes/Princess/City/прин 1.png" id="37_icpma"]
+[ext_resource type="Texture2D" uid="uid://bhruku7uk3c3d" path="res://scenes/Princess/City/прин 2.png" id="38_2byis"]
+[ext_resource type="Texture2D" uid="uid://h0jjekerhlq7" path="res://scenes/Princess/City/прин 3.png" id="39_s3qjb"]
+[ext_resource type="Texture2D" uid="uid://cubpqhi7k3c35" path="res://scenes/Princess/City/прин 4.png" id="40_2d6ho"]
+[ext_resource type="Texture2D" uid="uid://dwx7tx5cwgq0j" path="res://scenes/Princess/City/прин 5.1.png" id="41_3v4v0"]
+[ext_resource type="Texture2D" uid="uid://dt46kukjxm2sm" path="res://scenes/Princess/City/прин 5.png" id="42_3boko"]
+[ext_resource type="Texture2D" uid="uid://cw46okmwgucgu" path="res://scenes/Princess/City/прин 6.png" id="43_7c8jj"]
+[ext_resource type="Texture2D" uid="uid://c4tt1tpyj6nva" path="res://scenes/Princess/City/прин 7.png" id="44_mgcke"]
+[ext_resource type="Texture2D" uid="uid://5vl4okx0dani" path="res://scenes/Princess/City/прин 8.png" id="45_dlfpy"]
+[ext_resource type="Texture2D" uid="uid://burmtyll7a3ke" path="res://scenes/Princess/City/прин 8.1.png" id="46_i4d5b"]
+[ext_resource type="Texture2D" uid="uid://dvyvcupytsgpc" path="res://scenes/Princess/City/прин 9.png" id="47_y62vu"]
+[ext_resource type="Texture2D" uid="uid://cphei81ciujvi" path="res://scenes/Princess/City/прин 10.png" id="48_yp3fw"]
+[ext_resource type="Texture2D" uid="uid://dta2m8exyohb0" path="res://scenes/Princess/City/прин 11.png" id="49_k0i5f"]
+[ext_resource type="Texture2D" uid="uid://dytij033jtrkn" path="res://scenes/Princess/City/прин 12.png" id="50_87dvm"]
+[ext_resource type="Texture2D" uid="uid://cj8b5ikph5trp" path="res://scenes/Princess/City/прин 13.png" id="51_npnmb"]
+[ext_resource type="Texture2D" uid="uid://dm1w0u5w5kgl5" path="res://scenes/Princess/City/прин 14.png" id="52_0tcwf"]
+[ext_resource type="Texture2D" uid="uid://cc8s2xlt5ncr0" path="res://scenes/Princess/City/прин 14.1.png" id="53_0mjs5"]
+
+[sub_resource type="GDScript" id="GDScript_72w51"]
+script/source = "extends Node2D
+
+@export var Level: int = 1;
+
+var _hp = 5;
+
+var set;
+
+var lost = preload(\"res://scenes/lost.tscn\");
+
+@onready var cleaner = $Holder/Cleaner;
+@onready var hps = [
+	$Holder/Hp/TowerHp,
+	$Holder/Hp/TowerHp2,
+	$Holder/Hp/TowerHp3,
+	$Holder/Hp/TowerHp4,
+	$Holder/Hp/TowerHp5,
+]
+
+func _ready():
+	randomize() 
+	match Level:
+		1: set = $Holder/Forest
+		2: set = $Holder/Swamp
+		3: set = $Holder/Berry
+		4: set = $Holder/City
+		
+	set.get_node(\"Backplate\").show();
+	set.neutral.show();	
+
+func _process(delta):
+	pass
+	
+func take_dmg():
+	_hp -= 1
+	if _hp <= -1:
+		show_negative(1);
+	else:
+		show_negative(1);
+		hps[_hp].modulate = Color(0, 0, 0, 0.2);
+		
+	
+func clear():
+	for sub in set.negative:
+		for sprite in sub:
+			sprite.hide();
+	for sub in set.positive:
+		for sprite in sub:
+			sprite.hide();
+		
+	set.neutral.show();
+
+func show_negative(duration: float):
+	set.neutral.hide();
+	for sprite in set.negative[randi() % set.negative.size()]:
+		sprite.show();
+	cleaner.start(duration);
+	
+func show_positive(duration: float):
+	set.neutral.hide();
+	for sprite in set.positive[randi() % set.positive.size()]:
+		sprite.show();
+	cleaner.start(duration);
+
+
+func _on_cleaner_timeout():
+	if _hp <= -1:
+		die();
+	else:
+		clear();
+
+func die():
+	add_sibling(lost.instantiate());
+"
+
+[sub_resource type="GDScript" id="GDScript_i25jj"]
+script/source = "extends Node2D
+
+@onready var positive = [
+	[$e7, $e6],
+	[$e8],
+]
+
+@onready var negative = [
+	[$e2],
+	[$e3],
+	[$e5, $e4]
+]
+
+@onready var neutral = $e1;
+"
+
+[sub_resource type="GDScript" id="GDScript_riay0"]
+script/source = "extends Node2D
+
+@onready var positive = [
+	[$e7, $e8]
+]
+
+@onready var negative = [
+	[$e2, $e11],
+	[$e5, $e9],
+	[$e3, $e9],
+	[$e6, $e10],
+	[$e1]
+
+]
+
+@onready var neutral = $e4;
+"
+
+[sub_resource type="GDScript" id="GDScript_gclb1"]
+script/source = "extends Node2D
+
+@onready var positive = [
+	[$e7],
+	[$e8, $e13],
+]
+
+@onready var negative = [
+	[$e2],
+	[$e3],
+	[$e4],
+	[$e5],
+	[$e9, $e10],
+	[$e6, $e11]
+]
+
+@onready var neutral = $e1;
+"
+
+[sub_resource type="GDScript" id="GDScript_m6ubi"]
+script/source = "extends Node2D
+
+@onready var positive = [
+	[$e3],
+	[$e4],
+	[$e51, $e5],
+	[$e6],
+	[$e10],
+	[$e13],
+	[$e14, $e141]
+]
+
+@onready var negative = [
+	[$e2],
+	[$e7],
+	[$e8, $e81],
+	[$e9],
+	[$e11],
+	[$e12],
+]
+
+@onready var neutral = $e1;
+"
+
+[node name="Princess" type="Node2D" groups=["princess"]]
+script = SubResource("GDScript_72w51")
+
+[node name="Holder" type="Node2D" parent="."]
+position = Vector2(3534, 2050)
+scale = Vector2(1.5, 1.5)
+
+[node name="Hp" type="Node2D" parent="Holder"]
+metadata/_edit_lock_ = true
+
+[node name="TowerHp" type="Sprite2D" parent="Holder/Hp"]
+position = Vector2(-75, 0)
+scale = Vector2(0.73, 0.73)
+texture = ExtResource("1_0oe7m")
+metadata/_edit_lock_ = true
+
+[node name="TowerHp2" type="Sprite2D" parent="Holder/Hp"]
+position = Vector2(75, 0)
+scale = Vector2(0.73, 0.73)
+texture = ExtResource("1_0oe7m")
+metadata/_edit_lock_ = true
+
+[node name="TowerHp3" type="Sprite2D" parent="Holder/Hp"]
+scale = Vector2(0.73, 0.73)
+texture = ExtResource("1_0oe7m")
+metadata/_edit_lock_ = true
+
+[node name="TowerHp4" type="Sprite2D" parent="Holder/Hp"]
+position = Vector2(147, 0)
+scale = Vector2(0.73, 0.73)
+texture = ExtResource("1_0oe7m")
+metadata/_edit_lock_ = true
+
+[node name="TowerHp5" type="Sprite2D" parent="Holder/Hp"]
+position = Vector2(-152, 0)
+scale = Vector2(0.73, 0.73)
+texture = ExtResource("1_0oe7m")
+metadata/_edit_lock_ = true
+
+[node name="Forest" type="Node2D" parent="Holder"]
+position = Vector2(0, -300)
+scale = Vector2(2, 2)
+script = SubResource("GDScript_i25jj")
+
+[node name="Backplate" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+position = Vector2(-4.5, 25)
+texture = ExtResource("2_hogib")
+
+[node name="e1" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+texture = ExtResource("2_j0gcd")
+metadata/_edit_lock_ = true
+
+[node name="e2" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+texture = ExtResource("3_64dyc")
+metadata/_edit_lock_ = true
+
+[node name="e3" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+texture = ExtResource("4_w3ggk")
+metadata/_edit_lock_ = true
+
+[node name="e4" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+texture = ExtResource("5_tvlr7")
+metadata/_edit_lock_ = true
+
+[node name="e5" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+texture = ExtResource("6_qdx5e")
+metadata/_edit_lock_ = true
+
+[node name="e6" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+texture = ExtResource("7_unegg")
+metadata/_edit_lock_ = true
+
+[node name="e7" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+texture = ExtResource("8_055tq")
+metadata/_edit_lock_ = true
+
+[node name="e8" type="Sprite2D" parent="Holder/Forest"]
+visible = false
+texture = ExtResource("9_gglkh")
+metadata/_edit_lock_ = true
+
+[node name="Swamp" type="Node2D" parent="Holder"]
+position = Vector2(0, -300)
+scale = Vector2(2, 2)
+script = SubResource("GDScript_riay0")
+
+[node name="Backplate" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-5, 25)
+texture = ExtResource("11_uipqm")
+metadata/_edit_lock_ = true
+
+[node name="e1" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-7.5, -6)
+texture = ExtResource("12_10kuy")
+
+[node name="e2" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-7.5, -7)
+texture = ExtResource("13_hls0o")
+
+[node name="e3" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-5.5, -6.5)
+texture = ExtResource("14_rydnx")
+
+[node name="e4" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-7.5, -7)
+texture = ExtResource("15_tn353")
+
+[node name="e5" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-7.5, -8)
+texture = ExtResource("16_foyed")
+
+[node name="e6" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-8.5, -7.5)
+texture = ExtResource("17_w2a4j")
+
+[node name="e7" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-7.5, -8.5)
+texture = ExtResource("18_nhkue")
+
+[node name="e8" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-7.5, -0.5)
+texture = ExtResource("19_yh2b7")
+
+[node name="e9" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(3.75, -1.25)
+scale = Vector2(1.2075, 1.2075)
+texture = ExtResource("20_u4772")
+
+[node name="e10" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-7.00004, -4.50002)
+texture = ExtResource("21_6d3b4")
+
+[node name="e11" type="Sprite2D" parent="Holder/Swamp"]
+visible = false
+position = Vector2(-7.5, -12)
+texture = ExtResource("22_gyxiw")
+
+[node name="Berry" type="Node2D" parent="Holder"]
+position = Vector2(0, -300)
+script = SubResource("GDScript_gclb1")
+
+[node name="Backplate" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("2_hogib")
+
+[node name="e13" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("35_22404")
+
+[node name="e1" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("23_bpiop")
+
+[node name="e2" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("24_svqrs")
+
+[node name="e3" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("25_1cj6y")
+
+[node name="e4" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("26_r66ka")
+
+[node name="e5" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("27_urwy8")
+
+[node name="e6" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("28_6vv3i")
+
+[node name="e7" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("29_tk4pm")
+
+[node name="e8" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("30_qhjog")
+
+[node name="e9" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("31_mha0u")
+
+[node name="e10" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("32_j6hs8")
+
+[node name="e11" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("33_fcu6j")
+
+[node name="e12" type="Sprite2D" parent="Holder/Berry"]
+visible = false
+scale = Vector2(2, 2)
+texture = ExtResource("34_pb3l4")
+
+[node name="City" type="Node2D" parent="Holder"]
+script = SubResource("GDScript_m6ubi")
+
+[node name="Backplate" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-10.6665, -238)
+scale = Vector2(2, 2)
+texture = ExtResource("36_um1fe")
+
+[node name="e1" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-14.6665, -303.333)
+scale = Vector2(2, 2)
+texture = ExtResource("37_icpma")
+
+[node name="e2" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-15.3333, -304.667)
+scale = Vector2(2, 2)
+texture = ExtResource("38_2byis")
+
+[node name="e3" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-10.6665, -311.333)
+scale = Vector2(2, 2)
+texture = ExtResource("39_s3qjb")
+
+[node name="e4" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-15.3333, -312.667)
+scale = Vector2(2, 2)
+texture = ExtResource("40_2d6ho")
+
+[node name="e51" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-14.6665, -344.667)
+scale = Vector2(2, 2)
+texture = ExtResource("41_3v4v0")
+
+[node name="e5" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-15.3333, -309.333)
+scale = Vector2(2, 2)
+texture = ExtResource("42_3boko")
+
+[node name="e6" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-11.3333, -313.333)
+scale = Vector2(2, 2)
+texture = ExtResource("43_7c8jj")
+
+[node name="e7" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-16, -318)
+scale = Vector2(2, 2)
+texture = ExtResource("44_mgcke")
+
+[node name="e8" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-9.33325, -320.667)
+scale = Vector2(2, 2)
+texture = ExtResource("45_dlfpy")
+
+[node name="e81" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-20, -353.333)
+scale = Vector2(2, 2)
+texture = ExtResource("46_i4d5b")
+
+[node name="e9" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-10.6665, -321.333)
+scale = Vector2(2, 2)
+texture = ExtResource("47_y62vu")
+
+[node name="e10" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-13.3333, -314.667)
+scale = Vector2(2, 2)
+texture = ExtResource("48_yp3fw")
+
+[node name="e11" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-17.3333, -309.333)
+scale = Vector2(2, 2)
+texture = ExtResource("49_k0i5f")
+
+[node name="e12" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-14, -307.333)
+scale = Vector2(2, 2)
+texture = ExtResource("50_87dvm")
+
+[node name="e13" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-16.6665, -309.333)
+scale = Vector2(2, 2)
+texture = ExtResource("51_npnmb")
+
+[node name="e14" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-20, -306)
+scale = Vector2(2, 2)
+texture = ExtResource("52_0tcwf")
+
+[node name="e141" type="Sprite2D" parent="Holder/City"]
+visible = false
+position = Vector2(-31.3333, -334.667)
+scale = Vector2(2, 2)
+texture = ExtResource("53_0mjs5")
+
+[node name="Cleaner" type="Timer" parent="Holder"]
+one_shot = true
+
+[connection signal="timeout" from="Holder/Cleaner" to="." method="_on_cleaner_timeout"]

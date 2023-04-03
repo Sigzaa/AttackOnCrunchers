@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://resources/лэри1.png" type="Texture2D" id=1]
+[ext_resource path="res://resources/лэри2.png" type="Texture2D" id=2]
+[ext_resource path="res://resources/лэри3.png" type="Texture2D" id=3]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "default",
+"speed": 2.0
+} ]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+frames = SubResource( 1 )
+frame = 3
+playing = true

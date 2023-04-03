@@ -1,0 +1,106 @@
+[gd_scene load_steps=6 format=3 uid="uid://cxo2b2u3141qt"]
+
+[ext_resource type="PackedScene" uid="uid://bb5t63hsxvciu" path="res://scenes/Core.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://ct382hcso5ws" path="res://towers/sniper/2.png" id="2_vmm8v"]
+[ext_resource type="Texture2D" uid="uid://bl3t2vauavy3" path="res://towers/sniper/1.png" id="3_qugs8"]
+
+[sub_resource type="GDScript" id="GDScript_3xche"]
+script/source = "extends Node2D
+@onready var anim = $Sprite;
+@onready var core = $Core;
+
+var Projectile = preload(\"res://towers/sniper/sniper_projectile.tscn\")
+var proj_inst_gl;
+var dmg_coef = 15;
+
+func wiki() -> Array:
+	var dmg_base = Projectile.instantiate().dmg;
+	return [
+		$Core.get_cd(),
+		$Core.get_distance(),
+		[
+			\"Dmg: \", 
+			dmg_base + dmg_coef * 0, 
+			dmg_base + dmg_coef * 1, 
+			dmg_base + dmg_coef * 2, 
+			dmg_base + dmg_coef * 3],
+		
+	]
+	
+func _instance(instance):
+	add_sibling(instance, true)
+
+func shoot():
+	_instance(proj_inst_gl);
+	
+func fire(enemy):
+	
+	var proj_inst = Projectile.instantiate()
+	proj_inst.position = get_position();
+	var direction = position.direction_to(enemy.global_position);
+	proj_inst.direction = direction;
+	proj_inst.dmg += dmg_coef * (core.level - 1)
+	
+	if direction.x >= 0:
+		anim.set_flip_h(true);
+	else:
+		anim.set_flip_h(false);
+	_instance(proj_inst);
+	
+	anim.play(\"shoot\");
+	
+	
+
+
+func _on_sprite_animation_finished():
+	anim.play(\"default\");
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5ehbi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vmm8v")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_qugs8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_qugs8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_qugs8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_vmm8v")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 5.0
+}]
+
+[node name="Sniper" type="Node2D" groups=["ghost"]]
+script = SubResource("GDScript_3xche")
+
+[node name="Core" parent="." node_paths=PackedStringArray("tower_sprite") groups=["tower"] instance=ExtResource("2")]
+shooting_cd = 1.5
+tower_cost = 100
+upgrade_cost = 200
+outer_scale = 4
+lvl_cd = -0.5
+lvl_distance = 0.5
+tower_sprite = NodePath("../Sprite")
+
+[node name="ShootCD" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_5ehbi")
+
+[connection signal="animation_finished" from="Sprite" to="." method="_on_sprite_animation_finished"]

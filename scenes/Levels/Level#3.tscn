@@ -1,0 +1,34 @@
+[gd_scene load_steps=8 format=3 uid="uid://v60nfm6qdihm"]
+
+[ext_resource type="PackedScene" uid="uid://cutyh2788nued" path="res://scenes/Maps/Map#3.tscn" id="1_og02u"]
+[ext_resource type="PackedScene" uid="uid://cqpdov5brs3mu" path="res://scenes/Hud/HudBar.tscn" id="2_nilix"]
+[ext_resource type="PackedScene" uid="uid://dcl7ta28qyia8" path="res://scenes/Placement.tscn" id="3_yaps4"]
+[ext_resource type="PackedScene" uid="uid://bv84n4klqfsdl" path="res://scenes/Bank.tscn" id="4_wdjkn"]
+[ext_resource type="PackedScene" uid="uid://dswf8kjkj65rc" path="res://scenes/EnemySpawner.tscn" id="5_qg1yw"]
+[ext_resource type="PackedScene" uid="uid://dm4jka5mpu7m4" path="res://scenes/Hud/WavesHud.tscn" id="6_70id0"]
+[ext_resource type="PackedScene" uid="uid://b8l84wrjtylyv" path="res://scenes/Princess/Princess.tscn" id="7_og11s"]
+
+[node name="Level#3" type="Node"]
+
+[node name="Map#1" parent="." instance=ExtResource("1_og02u")]
+
+[node name="HudBar" parent="." instance=ExtResource("2_nilix")]
+offset_left = -33.0
+offset_top = -31.0
+offset_right = -33.0
+offset_bottom = -31.0
+
+[node name="Placement" parent="." groups=["placement_logic"] instance=ExtResource("3_yaps4")]
+
+[node name="Bank" parent="." instance=ExtResource("4_wdjkn")]
+
+[node name="EnemySpawner" parent="." instance=ExtResource("5_qg1yw")]
+
+[node name="WavesHud" parent="." instance=ExtResource("6_70id0")]
+offset_left = 17.0
+offset_top = -2.0
+offset_right = 57.0
+offset_bottom = 38.0
+
+[node name="Princess" parent="." instance=ExtResource("7_og11s")]
+Level = 3

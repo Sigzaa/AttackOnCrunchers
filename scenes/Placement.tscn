@@ -1,0 +1,99 @@
+[gd_scene load_steps=2 format=3 uid="uid://dcl7ta28qyia8"]
+
+[sub_resource type="GDScript" id="1"]
+resource_name = "PlacementScript"
+script/source = "extends Node
+
+@onready var item_list = get_node(\"../HudBar/ItemList\")
+
+var Tank = preload(\"res://towers/tank/Tank.tscn\")
+var Wizzard = preload(\"res://towers/wizzard/Wizzard.tscn\")
+var Sniper = preload(\"res://towers/sniper/Sniper.tscn\")
+var Freeze = preload(\"res://towers/poison/Poison.tscn\")
+var UpgradeGhost = preload(\"res://scenes/Actions/UpgradeGhost.tscn\")
+var DowngradeGhost = preload(\"res://scenes/Actions/DowngradeGhost.tscn\")
+var RemoveGhost = preload(\"res://scenes/Actions/RemoveGhost.tscn\")
+var HealGhost = preload(\"res://scenes/Actions/HealGhost.tscn\")
+
+var prev_sel = -1
+
+var drag_and_drop = false
+
+func _ready():
+	
+	item_list.connect(\"item_selected\",Callable(self,\"_item_selected\"))
+	item_list.connect(\"mouse_exited\",Callable(self,\"_mouse_exited\"))
+
+func _process(delta):
+	_ghost_towers()
+	_deselect_ghosts()
+
+func _deselect_ghosts():
+	for ghost in get_tree().get_nodes_in_group(\"ghost\"):
+		if Input.is_mouse_button_pressed(2) or Input.is_action_just_pressed(\"ui_cancel\"):
+			ghost.queue_free()
+	
+func _mouse_exited():
+	if Input.is_mouse_button_pressed( 1 ):
+		drag_and_drop = false
+
+func _item_selected(index):
+	remove_ghosts()
+
+	if index == prev_sel:
+		prev_sel = -1
+		
+		item_list.deselect_all()
+		return
+	
+	prev_sel = index
+	
+	var node
+	
+	if index == 0:
+		node = Tank
+		
+	if index == 1:
+		node = Wizzard
+		
+	if index == 2:
+		node = Freeze
+		
+	if index == 3:
+		node = Sniper
+	
+	if index == 4:
+		node = UpgradeGhost
+		
+	if index == 5:
+		node = DowngradeGhost
+		
+	if index == 6:
+		node = RemoveGhost
+	
+	if index == 7:
+		node = HealGhost
+	
+	_instance_sprite(node)
+		
+
+func _instance_sprite(node):
+	var ghost_instance = node.instantiate()
+	ghost_instance.modulate.g = 0.3
+	ghost_instance.modulate.b = 0.3
+	
+	get_parent().add_child(ghost_instance)
+
+func _ghost_towers():
+	for ghost in get_tree().get_nodes_in_group(\"ghost\"):
+		ghost.position = get_viewport().get_mouse_position()
+		
+
+func remove_ghosts():
+	for ghost in get_tree().get_nodes_in_group(\"ghost\"):
+		ghost.queue_free()
+	
+"
+
+[node name="Placement" type="Node"]
+script = SubResource("1")

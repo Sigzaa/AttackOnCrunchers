@@ -1,0 +1,91 @@
+[gd_scene load_steps=5 format=3 uid="uid://dwkhhhre7b72w"]
+
+[ext_resource type="Theme" uid="uid://crs1hao114fhj" path="res://resources/theme.tres" id="1_jl3ua"]
+
+[sub_resource type="GDScript" id="GDScript_l7uqa"]
+script/source = "extends Control
+@onready var player = $DmgPlayer;
+
+var dmg: int;
+
+	
+func _process(delta):
+	if !player.is_playing():
+		$TakeDmg.text = str(-dmg);
+		player.play(\"take_dmg\");
+"
+
+[sub_resource type="Animation" id="Animation_hs31b"]
+resource_name = "take_dmg"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TakeDmg:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(0.112656, 1),
+"update": 0,
+"values": [Vector2(60, -70), Vector2(60, -200)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TakeDmg:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.7),
+"transitions": PackedFloat32Array(1, 2.2974, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.7),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ckmmk"]
+_data = {
+"take_dmg": SubResource("Animation_hs31b")
+}
+
+[node name="TakeDmg" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_l7uqa")
+
+[node name="DmgPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ckmmk")
+}
+
+[node name="TakeDmg" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 60.0
+offset_top = -70.0
+offset_right = 113.0
+offset_bottom = -34.0
+rotation = -9.28593e-05
+theme = ExtResource("1_jl3ua")
+theme_override_colors/font_color = Color(1, 0, 0, 0.568627)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.494118)
+theme_override_constants/outline_size = 9
+text = "123"
