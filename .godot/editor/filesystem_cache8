@@ -1,5 +1,5 @@
 2a60927148abd1d33b818b535e306557
-::res://::1680532991
+::res://::1680535610
 default_env.tres::Environment::2784261978733214129::1680531523::0::1::::<><>::
 export_presets.cfg::TextFile::-1::1680530414::0::1::::<><>::
 globals.gd::GDScript::-1::1679490136::0::1::::<>Node<>::
@@ -1149,8 +1149,6 @@ Princess.tscn::PackedScene::4727417310038006849::1680439299::0::1::::<><>::uid:/
 ::res://scripts/::1680476369
 Enemy.gd::GDScript::-1::1680476369::0::1::::<>Node2D<>::
 placement.gd::GDScript::-1::1679490136::0::1::::<>Node<>::
-::res://testing/::1679520701
-cruncher_test.tscn::PackedScene::5171667705210730766::1679520701::0::1::::<><>::uid://bl6andsq4t1be<>uid://dr11h8wcjjvw6<>uid://bj78tbgmqgc8e
 ::res://towers/::1680474455
 distance_range_circle.png::CompressedTexture2D::9056389998777496200::1672919293::1679490150::1::::<><>::
 TankProjectile.tscn::PackedScene::1810190209787387990::1680474455::0::1::::<><>::uid://cmgxggdaljxxo<>uid://3na0x2wvk6xl<>uid://bpxi1kp5sin87<>uid://ruakkmalsra<>uid://d2a2xv648xqva<>uid://688q6ctlyxqm<>uid://4nchnxjc24r4<>uid://de81tmc2cq217<>uid://bqiyyjnpq515b<>uid://cyidxrnx528sx
